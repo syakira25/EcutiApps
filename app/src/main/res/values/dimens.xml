@@ -1,0 +1,14 @@
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="standard_padding">16dp</dimen>
+
+    <dimen name="standard_separator">8dp</dimen>
+    <dimen name="secondary_separator">56dp</dimen>
+
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <dimen name="default_padding">16dp</dimen>
+    <dimen name="drawable_padding">5dp</dimen>
+    <dimen name="app_name_size">42sp</dimen>
+</resources>
