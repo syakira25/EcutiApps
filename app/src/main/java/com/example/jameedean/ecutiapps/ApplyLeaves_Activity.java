@@ -17,24 +17,32 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.jameedean.ecutiapps.adapter.StaffAdapter;
+import com.example.jameedean.ecutiapps.data.Reference;
+import com.example.jameedean.ecutiapps.model.Staff;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class ApplyLeaves_Activity extends AppCompatActivity {
 
-    private TextView email;
-    private TextView name;
-    private TextView userId;
+    private TextView mTVemail;
+    private TextView mTVname;
+
+    private StaffAdapter mAdapter;
+
+    private ArrayList<String> mKeys;
 
     // Firebase Authentication
     private String mId2;
-    private FirebaseAuth mFirebaseAuth;
-    private FirebaseUser mCurrentUser;
-    private DatabaseReference mReference;
+    private DatabaseReference mReference,rootRef;
 
     protected  static TextView displayCurrentTime;
     protected  static TextView displayCurrentTime2;
@@ -44,20 +52,7 @@ public class ApplyLeaves_Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_applyleaves);
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        setDataToView(user);
-        authListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user == null) {
-                    // user auth state is changed - user is null
-                    // launch login activity
-                    startActivity(new Intent(ApplyLeaves_Activity.this, MainActivity.class));
-                    finish();
-                }
-            }
-        };
+        mTVname = (TextView)findViewById(R.id.name_field);
         displayCurrentTime = (TextView)findViewById(R.id.selected_time);
         displayCurrentTime2 = (TextView)findViewById(R.id.selected_time2);
         ImageButton displayTimeButton = (ImageButton)findViewById(R.id.select_time);
@@ -81,8 +76,35 @@ public class ApplyLeaves_Activity extends AppCompatActivity {
             }
         });
 
+        mReference = FirebaseDatabase.getInstance().getReference("Users");
+
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        // listening for changes
+        mReference.child("name").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {;
+                // load data
+                for (DataSnapshot noteSnapshot : dataSnapshot.getChildren()) {
+                    mTVname.setText(noteSnapshot.getValue().toString());
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // stop listening
+            }
+        });
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
     public static class DatePickerFragement2 extends DialogFragment implements DatePickerDialog.OnDateSetListener{
 
         @Override
@@ -116,30 +138,6 @@ public class ApplyLeaves_Activity extends AppCompatActivity {
             //displayCurrentTime2.setText(String.valueOf(year2)+"-"+String.valueOf(month2)+"-"+String.valueOf(day2));
         }
     }
-
-    @SuppressLint("SetTextI18n")
-    private void setDataToView(FirebaseUser user) {
-
-    }
-
-    // this listener will be called when there is change in firebase user session
-    FirebaseAuth.AuthStateListener authListener = new FirebaseAuth.AuthStateListener() {
-        @SuppressLint("SetTextI18n")
-        @Override
-        public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-            FirebaseUser user = firebaseAuth.getCurrentUser();
-            if (user == null) {
-                // user auth state is changed - user is null
-                // launch login activity
-                startActivity(new Intent(ApplyLeaves_Activity.this, MainActivity.class));
-                finish();
-            } else {
-                setDataToView(user);
-            }
-        }
-
-
-    };
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {

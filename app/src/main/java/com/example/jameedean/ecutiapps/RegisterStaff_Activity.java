@@ -8,25 +8,33 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Patterns;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.jameedean.ecutiapps.data.Reference;
 import com.example.jameedean.ecutiapps.model.Staff;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class RegisterStaff_Activity extends AppCompatActivity implements View.OnClickListener {
 
     private EditText editTextName, editTextEmail, editTextPassword, editTextPhone;
     private ProgressDialog progressDialog;
+
+    private String mId;
 
     // Firebase Authentication
     private DatabaseReference mReference;
@@ -40,6 +48,10 @@ public class RegisterStaff_Activity extends AppCompatActivity implements View.On
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        if(getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
         //Get Firebase auth instance
         mFirebaseAuth = FirebaseAuth.getInstance();
         mCurrentUser = mFirebaseAuth.getCurrentUser();
@@ -49,7 +61,55 @@ public class RegisterStaff_Activity extends AppCompatActivity implements View.On
         editTextPassword = findViewById(R.id.edit_text_password);
         editTextPhone = findViewById(R.id.edit_text_phone);
 
-        findViewById(R.id.button_register).setOnClickListener(this);
+        mReference = FirebaseDatabase.getInstance().getReference(mCurrentUser.getUid()).child(Reference.USER_KEY);
+
+        Intent intent = getIntent();
+        // Load record
+        if(intent != null) {
+            mId = intent.getStringExtra(Reference.STAFF_ID);
+            if(mId != null) {
+                mReference.child(mId).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Staff model = dataSnapshot.getValue(Staff.class);
+                        if(model != null) {
+                            editTextName.setText(model.getName());
+                            editTextEmail.setText(model.getEmail());
+                            editTextPassword.setText(model.getPassword());
+                            editTextPhone.setText(model.getPhone());
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        }
+
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+
+        MenuItem item = menu.findItem(R.id.action_delete);
+
+        if(mId == null) {
+            item.setEnabled(false);
+            item.setVisible(false);
+        } else {
+            item.setEnabled(true);
+            item.setVisible(true);
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_note, menu);
+        return true;
     }
 
     @Override
@@ -58,6 +118,53 @@ public class RegisterStaff_Activity extends AppCompatActivity implements View.On
 
         if (mFirebaseAuth.getCurrentUser() != null) {
             //handle the already login user
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.action_save:
+                registerUser();
+                break;
+            case R.id.action_delete:
+                if(!mId.isEmpty()) {
+                    mReference.child(mId).removeValue(new DatabaseReference.CompletionListener() {
+                        @Override
+                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                            actionNotification(databaseError, R.string.done_deleted);
+                        }
+                    });
+                }
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    /***
+     * Save record to firebase
+     * @param model
+     */
+    private void save(Staff model,
+                      DatabaseReference.CompletionListener listener) {
+
+        if(mId == null) {
+            // generate id
+            mId = mReference.push().getKey();
+        }
+
+        mReference.child(mId).setValue(model, listener);
+    }
+
+    private void actionNotification(DatabaseError error, int successResourceId) {
+        // close activity
+        if(error == null) {
+            Toast.makeText(RegisterStaff_Activity.this, successResourceId, Toast.LENGTH_SHORT).show();
+            finish();
+        } else {
+            Toast.makeText(RegisterStaff_Activity.this, error.getCode(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -123,8 +230,15 @@ public class RegisterStaff_Activity extends AppCompatActivity implements View.On
                                    name,
                                     email,
                                     password,
-                                    phone
+                                    phone,
+                                    FirebaseAuth.getInstance().getUid()
                             );
+                            save(model, new DatabaseReference.CompletionListener() {
+                                @Override
+                                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                    actionNotification(databaseError, R.string.done_saved);
+                                }
+                            });
 
                             FirebaseDatabase.getInstance().getReference("Users")
                                     .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
@@ -162,9 +276,9 @@ public class RegisterStaff_Activity extends AppCompatActivity implements View.On
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.button_register:
-                registerUser();
-                break;
+           // case R.id.button_register:
+               // registerUser();
+               // break;
         }
     }
 }

@@ -40,8 +40,8 @@ public class StaffAdapter extends RecyclerView.Adapter<StaffAdapter.StaffViewHol
 
         holder.name.setText(model.getName());
         holder.email.setText(model.getEmail());
-        holder.password.setText(model.getPassword());
-        holder.phone.setText(model.getPhone());
+        //holder.password.setText(model.getPassword());
+        //holder.phone.setText(model.getPhone());
         // set description as log
     }
 
@@ -79,6 +79,9 @@ public class StaffAdapter extends RecyclerView.Adapter<StaffAdapter.StaffViewHol
             super(itemView);
 
             name = itemView.findViewById(R.id.tv_name);
+            email = itemView.findViewById(R.id.tv_email);
+            //password = itemView.findViewById(R.id.tv_name);
+           // phone = itemView.findViewById(R.id.tv_name);
 
             itemView.setOnClickListener(this);
         }

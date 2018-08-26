@@ -7,16 +7,18 @@ public class Staff {
 
     private String name;
     private String password, phone, email;
+    private String Uid;
 
     public Staff() {
         // This is default constructor.
     }
 
-    public Staff(String name, String email, String password, String phone) {
+    public Staff(String name, String email, String password, String phone, String uid) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.phone = phone;
+        this.Uid = uid;
     }
 
     public String getName() {
@@ -49,5 +51,13 @@ public class Staff {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getUid() {
+        return Uid;
+    }
+
+    public void setUid(String uid) {
+        this.Uid = uid;
     }
 }

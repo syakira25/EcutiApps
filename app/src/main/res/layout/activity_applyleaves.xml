@@ -28,7 +28,8 @@
         android:layout_alignBaseline="@+id/name_textView"
         android:layout_alignBottom="@+id/name_textView"
         android:layout_alignParentEnd="true"
-        android:textStyle="bold|italic" />
+        android:textStyle="bold|italic"
+        android:text="name"/>
 
     <TextView
         android:id="@+id/email_textView"
@@ -135,7 +136,6 @@
         android:id="@+id/et_description"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:layout_alignEnd="@+id/btnOrder"
         android:layout_below="@+id/select_time2"
         android:background="@drawable/roundedcorner"
         android:gravity="top|left"

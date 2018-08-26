@@ -34,5 +34,18 @@
         android:layout_toEndOf="@id/iv_icon"
         android:paddingStart="@dimen/standard_separator"
         android:paddingEnd="@dimen/standard_separator"/>
+
+    <TextView
+        android:id="@+id/tv_email"
+        style="@style/TextAppearance.AppCompat.Caption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_name"
+        android:layout_toEndOf="@+id/iv_icon"
+        android:layout_toRightOf="@+id/iv_icon"
+        android:ellipsize="end"
+        android:paddingEnd="@dimen/standard_separator"
+        android:paddingStart="@dimen/standard_separator"
+        android:text="Email Agency" />
 </RelativeLayout>
 </android.support.v7.widget.CardView>

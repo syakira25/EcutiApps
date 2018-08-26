@@ -66,13 +66,13 @@ public class StaffMain_Activity extends AppCompatActivity{
             public void onClick(int pos) {
                 // Open back note activity with data
                 Intent intent = new Intent(getApplicationContext(), RegisterStaff_Activity.class);
-                intent.putExtra(Reference.USER_KEY, mKeys.get(pos));
+                intent.putExtra(Reference.STAFF_ID, mKeys.get(pos));
                 startActivity(intent);
             }
         });
         recyclerView.setAdapter(mAdapter);
 
-        mReference = FirebaseDatabase.getInstance().getReference(mCurrentUser.getUid()).child("User");
+        mReference = FirebaseDatabase.getInstance().getReference(mCurrentUser.getUid()).child(Reference.USER_KEY);
     }
 
     @Override
@@ -126,6 +126,7 @@ public class StaffMain_Activity extends AppCompatActivity{
 
         return true;
     }
+
 }
 
 
