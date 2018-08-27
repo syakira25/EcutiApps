@@ -5,9 +5,11 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Intent;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,6 +33,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class ApplyLeaves_Activity extends AppCompatActivity {
 
@@ -42,6 +45,7 @@ public class ApplyLeaves_Activity extends AppCompatActivity {
     private ArrayList<String> mKeys;
 
     // Firebase Authentication
+    private String uId;
     private String mId;
     private DatabaseReference mReference;
     private FirebaseAuth mFirebaseAuth;
@@ -83,27 +87,26 @@ public class ApplyLeaves_Activity extends AppCompatActivity {
         });
 
         mReference = FirebaseDatabase.getInstance().getReference(Reference.USER_DB);
-
+        uId = mCurrentUser.getUid();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
         // listening for changes
         mReference.child(mCurrentUser.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {;
-                // load data
+            public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot noteSnapshot : dataSnapshot.getChildren()) {
-                    mTVname.setText(noteSnapshot.getValue().toString());
-
+                    // load data
+                   Staff staff = noteSnapshot.getValue(Staff.class);
+                   mTVname.setText(staff.getName());
                 }
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 // stop listening
+                Toast.makeText(getApplicationContext(),"Network ERROR. Please check your connection", Toast.LENGTH_LONG).show();
             }
         });
     }
