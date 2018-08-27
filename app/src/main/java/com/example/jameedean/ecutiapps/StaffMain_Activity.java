@@ -72,7 +72,7 @@ public class StaffMain_Activity extends AppCompatActivity{
         });
         recyclerView.setAdapter(mAdapter);
 
-        mReference = FirebaseDatabase.getInstance().getReference(mCurrentUser.getUid()).child(Reference.USER_KEY);
+        mReference = FirebaseDatabase.getInstance().getReference(mCurrentUser.getUid()).child(Reference.USER_DB);
     }
 
     @Override

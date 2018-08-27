@@ -61,7 +61,7 @@ public class RegisterStaff_Activity extends AppCompatActivity implements View.On
         editTextPassword = findViewById(R.id.edit_text_password);
         editTextPhone = findViewById(R.id.edit_text_phone);
 
-        mReference = FirebaseDatabase.getInstance().getReference(mCurrentUser.getUid()).child(Reference.USER_KEY);
+        mReference = FirebaseDatabase.getInstance().getReference(mCurrentUser.getUid()).child(Reference.USER_DB);
 
         Intent intent = getIntent();
         // Load record

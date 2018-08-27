@@ -82,7 +82,7 @@ public class ApplyLeaves_Activity extends AppCompatActivity {
             }
         });
 
-        mReference = FirebaseDatabase.getInstance().getReference(Reference.USER_KEY);
+        mReference = FirebaseDatabase.getInstance().getReference(Reference.USER_DB);
 
     }
 
@@ -97,6 +97,7 @@ public class ApplyLeaves_Activity extends AppCompatActivity {
                 // load data
                 for (DataSnapshot noteSnapshot : dataSnapshot.getChildren()) {
                     mTVname.setText(noteSnapshot.getValue().toString());
+
                 }
             }
 
