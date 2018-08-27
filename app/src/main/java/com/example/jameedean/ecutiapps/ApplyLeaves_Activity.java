@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.example.jameedean.ecutiapps.adapter.StaffAdapter;
 import com.example.jameedean.ecutiapps.data.Reference;
+import com.example.jameedean.ecutiapps.model.ApplyLeaves_Model;
 import com.example.jameedean.ecutiapps.model.Staff;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -41,8 +42,10 @@ public class ApplyLeaves_Activity extends AppCompatActivity {
     private ArrayList<String> mKeys;
 
     // Firebase Authentication
-    private String mId2;
-    private DatabaseReference mReference,rootRef;
+    private String mId;
+    private DatabaseReference mReference;
+    private FirebaseAuth mFirebaseAuth;
+    private FirebaseUser mCurrentUser;
 
     protected  static TextView displayCurrentTime;
     protected  static TextView displayCurrentTime2;
@@ -52,6 +55,10 @@ public class ApplyLeaves_Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_applyleaves);
 
+        //Get Firebase auth instance
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mCurrentUser = mFirebaseAuth.getCurrentUser();
+
         mTVname = (TextView)findViewById(R.id.name_field);
         displayCurrentTime = (TextView)findViewById(R.id.selected_time);
         displayCurrentTime2 = (TextView)findViewById(R.id.selected_time2);
@@ -59,7 +66,6 @@ public class ApplyLeaves_Activity extends AppCompatActivity {
         ImageButton displayTimeButton2 = (ImageButton)findViewById(R.id.select_time2);
 
         assert  displayTimeButton != null;
-
         displayTimeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,7 +82,7 @@ public class ApplyLeaves_Activity extends AppCompatActivity {
             }
         });
 
-        mReference = FirebaseDatabase.getInstance().getReference("Users");
+        mReference = FirebaseDatabase.getInstance().getReference(Reference.USER_KEY);
 
     }
 
@@ -85,7 +91,7 @@ public class ApplyLeaves_Activity extends AppCompatActivity {
         super.onStart();
 
         // listening for changes
-        mReference.child("name").addValueEventListener(new ValueEventListener() {
+        mReference.child(mCurrentUser.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {;
                 // load data
@@ -144,7 +150,7 @@ public class ApplyLeaves_Activity extends AppCompatActivity {
 
         MenuItem item = menu.findItem(R.id.action_delete);
 
-        if(mId2 == null) {
+        if(mId == null) {
             item.setEnabled(false);
             item.setVisible(false);
         } else {
@@ -166,11 +172,20 @@ public class ApplyLeaves_Activity extends AppCompatActivity {
 
         switch (item.getItemId()) {
             case R.id.action_save:
+                // What to do when save
+                ApplyLeaves_Model model = new ApplyLeaves_Model(
+                );
 
+                save(model, new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                        actionNotification(databaseError, R.string.done_saved);
+                    }
+                });
                 break;
             case R.id.action_delete:
-                if(!mId2.isEmpty()) {
-                    mReference.child(mId2).removeValue(new DatabaseReference.CompletionListener() {
+                if(!mId.isEmpty()) {
+                    mReference.child(mId).removeValue(new DatabaseReference.CompletionListener() {
                         @Override
                         public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                             actionNotification(databaseError, R.string.done_deleted2);
@@ -181,6 +196,21 @@ public class ApplyLeaves_Activity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /***
+     * Save record to firebase
+     * @param model
+     */
+    private void save(ApplyLeaves_Model model,
+                      DatabaseReference.CompletionListener listener) {
+
+        if(mId == null) {
+            // generate id
+            mId = mReference.push().getKey();
+        }
+
+        mReference.child(mId).setValue(model, listener);
     }
 
     private void actionNotification(DatabaseError error, int successResourceId) {

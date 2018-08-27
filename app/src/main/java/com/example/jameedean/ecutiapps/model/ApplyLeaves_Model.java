@@ -11,8 +11,8 @@ public class ApplyLeaves_Model implements Serializable{
 
     public ApplyLeaves_Model() {
         // This is default constructor.
-
     }
+
     public String getDate() {
         return date;
     }

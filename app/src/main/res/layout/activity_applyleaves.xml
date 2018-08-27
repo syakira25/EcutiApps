@@ -29,7 +29,8 @@
         android:layout_alignBottom="@+id/name_textView"
         android:layout_alignParentEnd="true"
         android:textStyle="bold|italic"
-        android:text="name"/>
+        android:text="name"
+        android:fontFamily="@font/ftv_font"/>
 
     <TextView
         android:id="@+id/email_textView"
