@@ -17,21 +17,18 @@
         android:background="@drawable/roundedcorner"
         android:hint="Name"
         android:inputType="text"
-        android:padding="16dp"
-        tools:ignore="UnknownId" />
+        android:padding="10dp" />
 
     <EditText
         android:id="@+id/edit_text_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/btnOrder"
         android:layout_below="@+id/edit_text_name"
         android:layout_marginTop="15dp"
         android:background="@drawable/roundedcorner"
         android:hint="Email"
         android:inputType="text"
-        android:padding="16dp"
-        tools:ignore="UnknownId" />
+        android:padding="10dp"/>
 
     <EditText
         android:id="@+id/edit_text_password"
@@ -39,27 +36,117 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/edit_text_email"
         android:drawablePadding="@dimen/drawable_padding"
-        android:layout_alignEnd="@+id/btnOrder"
         android:background="@drawable/roundedcorner"
         android:hint="@string/password"
         android:inputType="textPassword"
         android:nextFocusDown="@id/edit_text_phone"
         android:textColor="@color/colorText"
         android:textColorHint="@color/colorHint"
-        android:padding="16dp"
+        android:padding="10dp"
         android:layout_marginTop="15dp"/>
 
     <EditText
         android:id="@+id/edit_text_phone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/btnOrder"
         android:layout_below="@+id/edit_text_password"
         android:background="@drawable/roundedcorner"
         android:gravity="top|left"
         android:hint="Phone"
         android:inputType="number"
-        android:padding="16dp"
+        android:padding="10dp"
         android:layout_marginTop="15dp"/>
+
+    <EditText
+        android:id="@+id/edit_job_position"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edit_text_phone"
+        android:background="@drawable/roundedcorner"
+        android:gravity="top|left"
+        android:hint="Job Position"
+        android:inputType="text"
+        android:padding="10dp"
+        android:layout_marginTop="15dp"/>
+
+    <TextView
+        android:id="@+id/annualjob_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edit_job_position"
+        android:layout_marginTop="15dp"
+        android:text="ANNUAL LEAVES : "
+        android:fontFamily="@font/ftv_font"
+        android:layout_alignParentStart="true"
+        android:padding="10dp"/>
+
+    <EditText
+        android:id="@+id/leave_textView2"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/annualjob_textView"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/roundedcorner"
+        android:padding="5dp" />
+
+    <TextView
+        android:id="@+id/mc_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/mc_leave_textView"
+        android:layout_alignBottom="@+id/mc_leave_textView"
+        android:layout_alignParentStart="true"
+        android:fontFamily="@font/ftv_font"
+        android:padding="10dp"
+        android:text="MEDICAL LEAVES : " />
+
+    <EditText
+        android:id="@+id/mc_leave_textView"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/leave_textView2"
+        android:layout_marginTop="11dp"
+        android:background="@drawable/roundedcorner"
+        android:padding="5dp" />
+
+    <TextView
+        android:id="@+id/el_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/mc_textView"
+        android:fontFamily="@font/ftv_font"
+        android:padding="10dp"
+        android:text="EMERGENCY : " />
+
+    <EditText
+        android:id="@+id/el_leaves"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/el_textView"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/roundedcorner"
+        android:padding="5dp" />
+
+    <TextView
+        android:id="@+id/pc_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/el_textView"
+        android:fontFamily="@font/ftv_font"
+        android:padding="10dp"
+        android:text="PUBLIC HOLIDAY : " />
+
+    <EditText
+        android:id="@+id/pc_leaves"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/el_textView"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/roundedcorner"
+        android:padding="5dp" />
 
 </RelativeLayout>

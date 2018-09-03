@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.example.jameedean.ecutiapps.adapter.StaffAdapter;
 import com.example.jameedean.ecutiapps.data.Reference;
@@ -24,9 +25,11 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class StaffMain_Activity extends AppCompatActivity{
+public class StaffMain_Activity extends AppCompatActivity {
 
     private StaffAdapter mAdapter;
+    private TextView mTVnoData;
+    private String mId;
 
     private final static int STAFF_ADD = 1000;
 
@@ -54,14 +57,14 @@ public class StaffMain_Activity extends AppCompatActivity{
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(),RegisterStaff_Activity.class);
+                Intent intent = new Intent(getApplicationContext(), RegisterStaff_Activity.class);
                 startActivityForResult(intent, STAFF_ADD);
             }
         });
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv_staff);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mAdapter = new StaffAdapter(this, new StaffAdapter.OnItemClick(){
+        mAdapter = new StaffAdapter(this, new StaffAdapter.OnItemClick() {
             @Override
             public void onClick(int pos) {
                 // Open back note activity with data
@@ -71,8 +74,16 @@ public class StaffMain_Activity extends AppCompatActivity{
             }
         });
         recyclerView.setAdapter(mAdapter);
+ /*       mTVnoData = findViewById(R.id.empty_tv);
 
-        mReference = FirebaseDatabase.getInstance().getReference(mCurrentUser.getUid()).child(Reference.USER_DB);
+        if (mAdapter==null) {
+            recyclerView.setVisibility(View.GONE);
+            mTVnoData.setVisibility(View.VISIBLE);
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+            mTVnoData.setVisibility(View.GONE);
+        }
+*/        mReference = FirebaseDatabase.getInstance().getReference(mCurrentUser.getUid()).child(Reference.USER_DB);
     }
 
     @Override

@@ -1,25 +1,40 @@
 package com.example.jameedean.ecutiapps.model;
 
-import java.io.Serializable;
-import java.util.HashMap;
+import com.google.firebase.database.IgnoreExtraProperties;
 
-public class ApplyLeaves_Model implements Serializable{
+@IgnoreExtraProperties
+public class ApplyLeaves_Model{
 
     private String name;
+    private String email;
+    private String types_leave;
+    private String date_start;
+    private String date_end;
     private String message;
-    private String date;
 
     public ApplyLeaves_Model() {
         // This is default constructor.
     }
 
-    public String getDate() {
-        return date;
+    public ApplyLeaves_Model(String name, String email, String types_leave, String date_start,String date_end, String message){
+        this.name = name;
+        this.email = email;
+        this.types_leave = types_leave;
+        this.date_start = date_start;
+        this.date_end = date_end;
+        this.message = message;
+    }
+    public String getDate_start() {
+        return date_start;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setDate_start(String date_start) {
+        this.date_start= date_start;
     }
+
+    public String getDate_end(){return date_end;}
+
+    public void setDate_end(String date_end){this.date_end=date_end;}
 
     public String getName() {
         return name;
@@ -29,6 +44,10 @@ public class ApplyLeaves_Model implements Serializable{
         this.name = name;
     }
 
+    public String getEmail() { return email;}
+
+    public void setEmail(String email){this.email = email;}
+
     public String getMessage() {
         return message;
     }
@@ -36,5 +55,9 @@ public class ApplyLeaves_Model implements Serializable{
     public void setMessage(String message) {
         this.message = message;
     }
+
+    public String getTypes_leave(){return types_leave;}
+
+    public void setTypes_leave(String types_leave){this.types_leave=types_leave;}
 
 }

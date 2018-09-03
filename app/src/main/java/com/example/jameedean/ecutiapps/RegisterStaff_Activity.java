@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Patterns;
@@ -33,6 +34,7 @@ public class RegisterStaff_Activity extends AppCompatActivity implements View.On
 
     private EditText editTextName, editTextEmail, editTextPassword, editTextPhone;
     private ProgressDialog progressDialog;
+    private EditText editTextAnnual, editTextMc, editTextEl, editTextPublic, editTextjobposition;
 
     private String mId;
 
@@ -60,6 +62,11 @@ public class RegisterStaff_Activity extends AppCompatActivity implements View.On
         editTextEmail = findViewById(R.id.edit_text_email);
         editTextPassword = findViewById(R.id.edit_text_password);
         editTextPhone = findViewById(R.id.edit_text_phone);
+        editTextjobposition = findViewById(R.id.edit_job_position);
+        editTextAnnual = findViewById(R.id.leave_textView2);
+        editTextMc = findViewById(R.id.mc_leave_textView);
+        editTextEl = findViewById(R.id.el_leaves);
+        editTextPublic = findViewById(R.id.pc_leaves);
 
         mReference = FirebaseDatabase.getInstance().getReference(mCurrentUser.getUid()).child(Reference.USER_DB);
 
@@ -77,6 +84,11 @@ public class RegisterStaff_Activity extends AppCompatActivity implements View.On
                             editTextEmail.setText(model.getEmail());
                             editTextPassword.setText(model.getPassword());
                             editTextPhone.setText(model.getPhone());
+                            editTextjobposition.setText(model.getJob_position());
+                            editTextAnnual.setText(model.getAnnual());
+                            editTextMc.setText(model.getMc());
+                            editTextEl.setText(model.getEl());
+                            editTextPublic.setText(model.getPublic_leave());
                         }
                     }
 
@@ -173,6 +185,11 @@ public class RegisterStaff_Activity extends AppCompatActivity implements View.On
         final String email = editTextEmail.getText().toString().trim();
         final String password = editTextPassword.getText().toString().trim();
         final String phone = editTextPhone.getText().toString().trim();
+        final String job_position = editTextjobposition.getText().toString().trim();
+        final String annual = editTextAnnual.getText().toString().trim();
+        final String mc = editTextMc.getText().toString().trim();
+        final String el = editTextEl.getText().toString().trim();
+        final String public_leave = editTextPublic.getText().toString().trim();
 
         if (name.isEmpty()) {
             editTextName.setError(getString(R.string.input_error_name));
@@ -231,7 +248,12 @@ public class RegisterStaff_Activity extends AppCompatActivity implements View.On
                                     email,
                                     password,
                                     phone,
-                                    FirebaseAuth.getInstance().getUid()
+                                    job_position,
+                                    FirebaseAuth.getInstance().getUid(),
+                                    annual,
+                                    mc,
+                                    el,
+                                    public_leave
                             );
                             save(model, new DatabaseReference.CompletionListener() {
                                 @Override

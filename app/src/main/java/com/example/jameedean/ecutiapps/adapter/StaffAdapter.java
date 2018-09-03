@@ -72,16 +72,19 @@ public class StaffAdapter extends RecyclerView.Adapter<StaffAdapter.StaffViewHol
 
     class StaffViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private TextView name;
+        private TextView name, job_position;
         private TextView email, password, phone;
+        private TextView annual, mc, el, public_holiday;
 
         StaffViewHolder(View itemView) {
             super(itemView);
 
             name = itemView.findViewById(R.id.tv_name);
             email = itemView.findViewById(R.id.tv_email);
-            //password = itemView.findViewById(R.id.tv_name);
-           // phone = itemView.findViewById(R.id.tv_name);
+            password = itemView.findViewById(R.id.tv_name);
+            phone = itemView.findViewById(R.id.tv_name);
+            //annual = itemView.findViewById(R.id.leave_textView2);
+
 
             itemView.setOnClickListener(this);
         }

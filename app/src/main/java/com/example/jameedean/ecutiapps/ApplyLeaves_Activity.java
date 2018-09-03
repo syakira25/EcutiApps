@@ -4,10 +4,12 @@ import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -15,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,15 +42,18 @@ public class ApplyLeaves_Activity extends AppCompatActivity {
 
     private TextView mTVemail;
     private TextView mTVname;
+    private TextView mTVmc, mTVAL, mTVEL, mTVPc;
+    private TextView mItemSelected;
+    private EditText mTVreasons;
+    private Button mTypeButton;
+    private String[] listItems;
+    boolean[] checkedItems;
 
-    private StaffAdapter mAdapter;
-
-    private ArrayList<String> mKeys;
+    ArrayList<Integer> mUserItems = new ArrayList<>();
 
     // Firebase Authentication
-    private String uId;
     private String mId;
-    private DatabaseReference mReference;
+    private DatabaseReference mReference, mReference1, mReference2;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mCurrentUser;
 
@@ -64,10 +70,79 @@ public class ApplyLeaves_Activity extends AppCompatActivity {
         mCurrentUser = mFirebaseAuth.getCurrentUser();
 
         mTVname = (TextView)findViewById(R.id.name_field);
+        mTVemail = (TextView)findViewById(R.id.displayed_email);
+        mTVAL = (TextView) findViewById(R.id.displayed_totalLeves);
+        mTVreasons = (EditText)findViewById(R.id.et_description);
+        mItemSelected = findViewById(R.id.displayed_typesleave);
+        mTypeButton = (Button)findViewById(R.id.btnOrder);
         displayCurrentTime = (TextView)findViewById(R.id.selected_time);
         displayCurrentTime2 = (TextView)findViewById(R.id.selected_time2);
         ImageButton displayTimeButton = (ImageButton)findViewById(R.id.select_time);
         ImageButton displayTimeButton2 = (ImageButton)findViewById(R.id.select_time2);
+
+        listItems = getResources().getStringArray(R.array.category_item);
+        checkedItems = new boolean[listItems.length];
+
+        mTypeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder mBuilder = new AlertDialog.Builder(ApplyLeaves_Activity.this);
+                mBuilder.setTitle(R.string.dialog_title);
+                mBuilder.setMultiChoiceItems(listItems, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int position, boolean isChecked) {
+//                        if (isChecked) {
+//                            if (!mUserItems.contains(position)) {
+//                                mUserItems.add(position);
+//                            }
+//                        } else if (mUserItems.contains(position)) {
+//                            mUserItems.remove(position);
+//                        }
+                        if (isChecked) {
+                            mUserItems.add(position);
+                        } else {
+                            mUserItems.remove((Integer.valueOf(position)));
+                        }
+                    }
+                });
+
+                mBuilder.setCancelable(false);
+                mBuilder.setPositiveButton(R.string.ok_label, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int which) {
+                        String item = "";
+                        for (int i = 0; i < mUserItems.size(); i++) {
+                            item = item + listItems[mUserItems.get(i)];
+                            if (i != mUserItems.size() - 1) {
+                                item = item + ", ";
+                            }
+                        }
+                        mItemSelected.setText(item);
+                    }
+                });
+
+                mBuilder.setNegativeButton(R.string.dismiss_label, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+
+                mBuilder.setNeutralButton(R.string.clear_all_label, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int which) {
+                        for (int i = 0; i < checkedItems.length; i++) {
+                            checkedItems[i] = false;
+                            mUserItems.clear();
+                            mItemSelected.setText("");
+                        }
+                    }
+                });
+
+                AlertDialog mDialog = mBuilder.create();
+                mDialog.show();
+            }
+        });
 
         assert  displayTimeButton != null;
         displayTimeButton.setOnClickListener(new View.OnClickListener() {
@@ -87,21 +162,21 @@ public class ApplyLeaves_Activity extends AppCompatActivity {
         });
 
         mReference = FirebaseDatabase.getInstance().getReference(Reference.USER_DB);
-        uId = mCurrentUser.getUid();
+        mReference1 = mReference.child(mCurrentUser.getUid());
+        //mReference2 = mReference1.child("name");
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         // listening for changes
-        mReference.child(mCurrentUser.getUid()).addValueEventListener(new ValueEventListener() {
+        mReference1.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot noteSnapshot : dataSnapshot.getChildren()) {
-                    // load data
-                   Staff staff = noteSnapshot.getValue(Staff.class);
-                   mTVname.setText(staff.getName());
-                }
+               mTVname.setText(dataSnapshot.child("name").getValue().toString());
+               mTVemail.setText(dataSnapshot.child("email").getValue().toString());
+               mTVAL.setText("ANNUAL LEAVES : "+dataSnapshot.child("annual").getValue().toString());
+               //mTVname.setText(dataSnapshot.getValue().toString());
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -115,6 +190,7 @@ public class ApplyLeaves_Activity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
     }
+
     public static class DatePickerFragement2 extends DialogFragment implements DatePickerDialog.OnDateSetListener{
 
         @Override
@@ -128,7 +204,7 @@ public class ApplyLeaves_Activity extends AppCompatActivity {
 
         public void onDateSet (DatePicker view, int year2, int month2, int day2){
             //displayCurrentTime.setText(String.valueOf(year)+"-"+String.valueOf(month)+"-"+String.valueOf(day));
-            displayCurrentTime2.setText(String.valueOf(year2)+"-"+String.valueOf(month2)+"-"+String.valueOf(day2));
+            displayCurrentTime2.setText(String.valueOf(day2)+"-"+String.valueOf(month2)+"-"+String.valueOf(year2));
         }
     }
 
@@ -144,7 +220,7 @@ public class ApplyLeaves_Activity extends AppCompatActivity {
         }
 
         public void onDateSet (DatePicker view, int year, int month, int day){
-            displayCurrentTime.setText(String.valueOf(year)+"-"+String.valueOf(month)+"-"+String.valueOf(day));
+            displayCurrentTime.setText(String.valueOf(day)+"-"+String.valueOf(month)+"-"+String.valueOf(year));
             //displayCurrentTime2.setText(String.valueOf(year2)+"-"+String.valueOf(month2)+"-"+String.valueOf(day2));
         }
     }
@@ -178,6 +254,13 @@ public class ApplyLeaves_Activity extends AppCompatActivity {
             case R.id.action_save:
                 // What to do when save
                 ApplyLeaves_Model model = new ApplyLeaves_Model(
+                        mTVname.getText().toString(),
+                        mTVemail.getText().toString(),
+                        mItemSelected.getText().toString(),
+                        displayCurrentTime.getText().toString(),
+                        displayCurrentTime2.getText().toString(),
+                        mTVreasons.getText().toString()
+
                 );
 
                 save(model, new DatabaseReference.CompletionListener() {

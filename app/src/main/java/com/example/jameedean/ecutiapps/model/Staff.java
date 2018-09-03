@@ -5,20 +5,26 @@ import com.google.firebase.database.IgnoreExtraProperties;
 @IgnoreExtraProperties
 public class Staff {
 
-    private String name;
+    public String name, job_position;
     private String password, phone, email;
+    private String annual, mc, el, public_leave;
     private String Uid;
 
     public Staff() {
         // This is default constructor.
     }
 
-    public Staff(String name, String email, String password, String phone, String uid) {
+    public Staff(String name, String email, String password, String phone, String job_position,String uid, String annual, String mc, String el, String public_leave) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.phone = phone;
+        this.job_position  = job_position;
         this.Uid = uid;
+        this.annual = annual;
+        this.mc = mc;
+        this.el = el;
+        this.public_leave = public_leave;
     }
 
     public String getName() {
@@ -53,6 +59,10 @@ public class Staff {
         this.phone = phone;
     }
 
+    public String getJob_position(){return job_position;}
+
+    public void setJob_position(String job_position){this.job_position=job_position;}
+
     public String getUid() {
         return Uid;
     }
@@ -60,4 +70,20 @@ public class Staff {
     public void setUid(String uid) {
         this.Uid = uid;
     }
+
+    public  String getAnnual(){return annual;}
+
+    public  void setAnnual(String annual){this.annual=annual;}
+
+    public String getMc(){return mc;}
+
+    public void setMc(String mc){this.mc=mc;}
+
+    public String getEl(){return el;}
+
+    public void setEl(String el){this.el=el;}
+
+    public String getPublic_leave(){return public_leave;}
+
+    public void setPublic_leave(String public_leave){this.public_leave=public_leave;}
 }

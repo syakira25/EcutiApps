@@ -1,20 +1,6 @@
 <resources>
     <string name="app_name">EcutiApps</string>
 
-    <string-array name="position">
-        <item>Project Executive</item>
-        <item>Programmer</item>
-        <item>Marketing</item>
-        <item>Management</item>
-        <item>Student Internship</item>
-    </string-array>
-
-    <string name="Job_Position">Job Position</string>
-    <string name="dialog_title">Select one job position</string>
-    <string name="ok_label">OK</string>
-    <string name="dismiss_label">Dismiss</string>
-    <string name="clear_all_label">Clear all</string>
-
     <!-- ACTION -->
     <string name="done_saved">Staff Info saved</string>
     <string name="done_deleted">Staff Info deleted</string>
@@ -25,7 +11,6 @@
     <!-- HINT -->
     <string name="hint_title">Enter name</string>
     <string name="hint_content">Enter content</string>
-    <string name="title_activity_main2">Main2Activity</string>
 
     <!-- MENU -->
     <string name="action_logout">Logout</string>
@@ -48,4 +33,17 @@
     <string name="input_error_email_invalid">enter a valid email</string>
 
     <string name="not_text"> </string>
+
+    <string name="Category">Types Leaves</string>
+    <string name="dialog_title">Select one leaves</string>
+    <string name="ok_label">OK</string>
+    <string name="dismiss_label">Dismiss</string>
+    <string name="clear_all_label">Clear all</string>
+
+    <string-array name="category_item">
+        <item>Annual Leaves</item>
+        <item>Medical Leaves (MC)</item>
+        <item>Emergency Leaves (EL)</item>
+        <item>Public Holiday</item>
+    </string-array>
 </resources>
