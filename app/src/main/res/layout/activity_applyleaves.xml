@@ -89,7 +89,8 @@
         android:layout_alignBaseline="@+id/type_leave"
         android:layout_alignBottom="@+id/type_leave"
         android:layout_toEndOf="@+id/type_leave"
-        android:textStyle="bold|italic" />
+        android:textStyle="bold|italic"
+        android:fontFamily="@font/ftv_font"/>
 
     <Button
         android:id="@+id/btnOrder"

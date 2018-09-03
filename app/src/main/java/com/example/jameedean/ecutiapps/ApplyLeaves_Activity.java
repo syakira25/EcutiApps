@@ -163,7 +163,7 @@ public class ApplyLeaves_Activity extends AppCompatActivity {
 
         mReference = FirebaseDatabase.getInstance().getReference(Reference.USER_DB);
         mReference1 = mReference.child(mCurrentUser.getUid());
-        //mReference2 = mReference1.child("name");
+        mReference2 = FirebaseDatabase.getInstance().getReference(mCurrentUser.getUid()).child(Reference.LEAVES_RECORD);
     }
 
     @Override
@@ -272,7 +272,7 @@ public class ApplyLeaves_Activity extends AppCompatActivity {
                 break;
             case R.id.action_delete:
                 if(!mId.isEmpty()) {
-                    mReference.child(mId).removeValue(new DatabaseReference.CompletionListener() {
+                    mReference1.child(mId).removeValue(new DatabaseReference.CompletionListener() {
                         @Override
                         public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                             actionNotification(databaseError, R.string.done_deleted2);
@@ -294,10 +294,10 @@ public class ApplyLeaves_Activity extends AppCompatActivity {
 
         if(mId == null) {
             // generate id
-            mId = mReference.push().getKey();
+            mId = mReference2.push().getKey();
         }
 
-        mReference.child(mId).setValue(model, listener);
+        mReference2.child(mId).setValue(model, listener);
     }
 
     private void actionNotification(DatabaseError error, int successResourceId) {
