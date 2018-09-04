@@ -11,18 +11,20 @@ public class ApplyLeaves_Model{
     private String date_start;
     private String date_end;
     private String message;
+    private String total;
 
     public ApplyLeaves_Model() {
         // This is default constructor.
     }
 
-    public ApplyLeaves_Model(String name, String email, String types_leave, String date_start,String date_end, String message){
+    public ApplyLeaves_Model(String name, String email, String types_leave, String date_start,String date_end, String message, String total){
         this.name = name;
         this.email = email;
         this.types_leave = types_leave;
         this.date_start = date_start;
         this.date_end = date_end;
         this.message = message;
+        this.total = total;
     }
     public String getDate_start() {
         return date_start;
@@ -59,5 +61,9 @@ public class ApplyLeaves_Model{
     public String getTypes_leave(){return types_leave;}
 
     public void setTypes_leave(String types_leave){this.types_leave=types_leave;}
+
+    public String getTotal(){return total;}
+
+    public void setTotal(String total){this.total=total;}
 
 }
