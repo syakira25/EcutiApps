@@ -15,10 +15,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,22 +37,23 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
-public class ApplyLeaves_Activity extends AppCompatActivity {
+public class ApplyLeaves_Activity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
     private TextView mTVemail;
     private TextView mTVname;
-    private TextView mTVmc, mTVAL, mTVEL, mTVPc;
+    private TextView mTVmc, mTVAL, mTVEL, mTVPc, mTVtotal;
     private TextView mItemSelected;
     private EditText mTVreasons;
-    private Button mTypeButton;
-    private String[] listItems;
-    boolean[] checkedItems;
-
-    ArrayList<Integer> mUserItems = new ArrayList<>();
+    private Spinner mTypeButton;
+    int year, year2;
+    int month, month2;
+    int day, day2;
 
     // Firebase Authentication
     private String mId;
@@ -73,76 +77,33 @@ public class ApplyLeaves_Activity extends AppCompatActivity {
         mTVemail = (TextView)findViewById(R.id.displayed_email);
         mTVAL = (TextView) findViewById(R.id.displayed_totalLeves);
         mTVreasons = (EditText)findViewById(R.id.et_description);
-        mItemSelected = findViewById(R.id.displayed_typesleave);
-        mTypeButton = (Button)findViewById(R.id.btnOrder);
+        mItemSelected = (TextView) findViewById(R.id.displayed_typesleave);
+        mTypeButton = (Spinner) findViewById(R.id.btnOrder);
+        mTVtotal =  (TextView) findViewById(R.id.displayed_total);
         displayCurrentTime = (TextView)findViewById(R.id.selected_time);
         displayCurrentTime2 = (TextView)findViewById(R.id.selected_time2);
         ImageButton displayTimeButton = (ImageButton)findViewById(R.id.select_time);
         ImageButton displayTimeButton2 = (ImageButton)findViewById(R.id.select_time2);
 
-        listItems = getResources().getStringArray(R.array.category_item);
-        checkedItems = new boolean[listItems.length];
+        // Spinner click listener
+        mTypeButton.setOnItemSelectedListener(this);
 
-        mTypeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog.Builder mBuilder = new AlertDialog.Builder(ApplyLeaves_Activity.this);
-                mBuilder.setTitle(R.string.dialog_title);
-                mBuilder.setMultiChoiceItems(listItems, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int position, boolean isChecked) {
-//                        if (isChecked) {
-//                            if (!mUserItems.contains(position)) {
-//                                mUserItems.add(position);
-//                            }
-//                        } else if (mUserItems.contains(position)) {
-//                            mUserItems.remove(position);
-//                        }
-                        if (isChecked) {
-                            mUserItems.add(position);
-                        } else {
-                            mUserItems.remove((Integer.valueOf(position)));
-                        }
-                    }
-                });
+        // Spinner Drop down elements
+        List<String> categories = new ArrayList<String>();
+        categories.add("Annual Leaves");
+        categories.add("Medical Leaves");
+        categories.add("Emergency Leaves");
+        categories.add("Public Holiday");
 
-                mBuilder.setCancelable(false);
-                mBuilder.setPositiveButton(R.string.ok_label, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int which) {
-                        String item = "";
-                        for (int i = 0; i < mUserItems.size(); i++) {
-                            item = item + listItems[mUserItems.get(i)];
-                            if (i != mUserItems.size() - 1) {
-                                item = item + ", ";
-                            }
-                        }
-                        mItemSelected.setText(item);
-                    }
-                });
+        // Creating adapter for spinner
+        mTypeButton.setPrompt("Select one leaves");
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,categories);
 
-                mBuilder.setNegativeButton(R.string.dismiss_label, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                });
+        // Drop down layout style - list view with radio button
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-                mBuilder.setNeutralButton(R.string.clear_all_label, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int which) {
-                        for (int i = 0; i < checkedItems.length; i++) {
-                            checkedItems[i] = false;
-                            mUserItems.clear();
-                            mItemSelected.setText("");
-                        }
-                    }
-                });
-
-                AlertDialog mDialog = mBuilder.create();
-                mDialog.show();
-            }
-        });
+        // attaching data adapter to spinner
+        mTypeButton.setAdapter(dataAdapter);
 
         assert  displayTimeButton != null;
         displayTimeButton.setOnClickListener(new View.OnClickListener() {
@@ -153,6 +114,7 @@ public class ApplyLeaves_Activity extends AppCompatActivity {
             }
         });
 
+        assert  displayTimeButton2 != null;
         displayTimeButton2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -167,6 +129,20 @@ public class ApplyLeaves_Activity extends AppCompatActivity {
     }
 
     @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        // On selecting a spinner item
+        String item = parent.getItemAtPosition(position).toString();
+        mItemSelected.setText(item);
+
+        // Showing selected spinner item
+        Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
+    }
+    public void onNothingSelected(AdapterView<?> arg0) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
         // listening for changes
@@ -175,7 +151,7 @@ public class ApplyLeaves_Activity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                mTVname.setText(dataSnapshot.child("name").getValue().toString());
                mTVemail.setText(dataSnapshot.child("email").getValue().toString());
-               mTVAL.setText("ANNUAL LEAVES : "+dataSnapshot.child("annual").getValue().toString());
+               mTVAL.setText("ANNUAL LEAVES : "+dataSnapshot.child("annual").getValue().toString()+"\n\n"+ "MEDICAL LEAVE : "+dataSnapshot.child("mc").getValue().toString());
                //mTVname.setText(dataSnapshot.getValue().toString());
             }
             @Override
@@ -191,31 +167,37 @@ public class ApplyLeaves_Activity extends AppCompatActivity {
         super.onStop();
     }
 
-    public static class DatePickerFragement2 extends DialogFragment implements DatePickerDialog.OnDateSetListener{
+    @SuppressLint("ValidFragment")
+    public class DatePickerFragement2 extends DialogFragment implements DatePickerDialog.OnDateSetListener{
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState){
             final Calendar c2 = Calendar.getInstance();
-            int year2 = c2.get(Calendar.YEAR);
-            int month2 = c2.get(Calendar.MONTH);
-            int day2 = c2.get(Calendar.DAY_OF_MONTH);
+            year2 = c2.get(Calendar.YEAR);
+            month2 = c2.get(Calendar.MONTH);
+            day2 = c2.get(Calendar.DAY_OF_MONTH);
+
             return new DatePickerDialog(getActivity(), this, year2, month2, day2);
+
         }
 
         public void onDateSet (DatePicker view, int year2, int month2, int day2){
             //displayCurrentTime.setText(String.valueOf(year)+"-"+String.valueOf(month)+"-"+String.valueOf(day));
             displayCurrentTime2.setText(String.valueOf(day2)+"-"+String.valueOf(month2)+"-"+String.valueOf(year2));
         }
+
     }
 
-    public static class DatePickerFragement extends DialogFragment implements DatePickerDialog.OnDateSetListener{
+    @SuppressLint("ValidFragment")
+    public class DatePickerFragement extends DialogFragment implements DatePickerDialog.OnDateSetListener{
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState){
             final Calendar c = Calendar.getInstance();
-            int year = c.get(Calendar.YEAR);
-            int month = c.get(Calendar.MONTH);
-            int day = c.get(Calendar.DAY_OF_MONTH);
+            year = c.get(Calendar.YEAR);
+            month = c.get(Calendar.MONTH);
+            day = c.get(Calendar.DAY_OF_MONTH);
+
             return new DatePickerDialog(getActivity(), this, year, month, day);
         }
 
@@ -257,6 +239,7 @@ public class ApplyLeaves_Activity extends AppCompatActivity {
                         mTVname.getText().toString(),
                         mTVemail.getText().toString(),
                         mItemSelected.getText().toString(),
+                        mTVtotal.getText().toString(),
                         displayCurrentTime.getText().toString(),
                         displayCurrentTime2.getText().toString(),
                         mTVreasons.getText().toString()
@@ -295,7 +278,24 @@ public class ApplyLeaves_Activity extends AppCompatActivity {
         if(mId == null) {
             // generate id
             mId = mReference2.push().getKey();
+
+            int Days = 0;
+            if(month2 == month){
+                if(day2>day){
+                    Days = day2 - day;
+                }
+            }
+            else if(month2>month){
+                if(day2>day){
+                    int m = month2-month;
+                    Days = m*30 + (day2 - day);
+                }
+            }
+            else
+                Toast.makeText(this,"Invalid Out Date",Toast.LENGTH_LONG).show();
+            mTVtotal.setText(String.valueOf(Days) + " Days");
         }
+
 
         mReference2.child(mId).setValue(model, listener);
     }

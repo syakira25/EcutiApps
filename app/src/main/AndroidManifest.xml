@@ -50,6 +50,16 @@
 
         <activity
             android:name=".ApplyLeaves_Activity"
+            android:label="Apply Leaves"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.jameedean.ecutiapps.DashboardActivity" />
+        </activity>
+
+        <activity
+            android:name=".ApproveActivity"
             android:label="Approve Staff Leaves"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme">

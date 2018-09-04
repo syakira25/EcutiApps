@@ -17,6 +17,7 @@ import com.google.firebase.database.DatabaseReference;
 public class DashboardActivity extends AppCompatActivity {
 
     private CardView btn_adduser;
+    private CardView btn_apply;
     private CardView btn_approve;
 
     // Firebase Authentication
@@ -32,6 +33,7 @@ public class DashboardActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         btn_adduser = (CardView) findViewById(R.id.adduserId);
+        btn_apply = (CardView) findViewById(R.id.applyId);
         btn_approve = (CardView) findViewById(R.id.approveId);
 
         btn_adduser.setOnClickListener(new View.OnClickListener() {
@@ -41,10 +43,17 @@ public class DashboardActivity extends AppCompatActivity {
             }
         });
 
-        btn_approve.setOnClickListener(new View.OnClickListener() {
+        btn_apply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(DashboardActivity.this, ApplyLeaves_Activity.class));
+            }
+        });
+
+        btn_approve.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(DashboardActivity.this, ApproveActivity.class));
             }
         });
     }
