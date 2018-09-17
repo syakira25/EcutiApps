@@ -12,8 +12,11 @@ import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,11 +33,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class RegisterStaff_Activity extends AppCompatActivity implements View.OnClickListener {
+import java.util.ArrayList;
+import java.util.List;
+
+public class RegisterStaff_Activity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     private EditText editTextName, editTextEmail, editTextPassword, editTextPhone;
-    private ProgressDialog progressDialog;
     private EditText editTextAnnual, editTextMc, editTextEl, editTextPublic, editTextjobposition;
+    private TextView mTVrole;
+    private Spinner roleuser;
+    private ProgressDialog progressDialog;
 
     private String mId;
 
@@ -67,6 +75,27 @@ public class RegisterStaff_Activity extends AppCompatActivity implements View.On
         editTextMc = findViewById(R.id.mc_leave_textView);
         editTextEl = findViewById(R.id.el_leaves);
         editTextPublic = findViewById(R.id.pc_leaves);
+        mTVrole = findViewById(R.id.role_leaves);
+        roleuser = findViewById(R.id.userrole);
+
+        // Spinner click listener
+        roleuser.setOnItemSelectedListener(this);
+
+        // Spinner Drop down elements
+        List<String> categories = new ArrayList<String>();
+        categories.add("Admin");
+        categories.add("Management");
+        categories.add("Staff");
+
+        // Creating adapter for spinner
+        roleuser.setPrompt("Status Leaves Staff");
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,categories);
+
+        // Drop down layout style - list view with radio button
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // attaching data adapter to spinner
+        roleuser.setAdapter(dataAdapter);
 
         mReference = FirebaseDatabase.getInstance().getReference(mCurrentUser.getUid()).child(Reference.USER_DB);
 
@@ -89,6 +118,7 @@ public class RegisterStaff_Activity extends AppCompatActivity implements View.On
                             editTextMc.setText(model.getMc());
                             editTextEl.setText(model.getEl());
                             editTextPublic.setText(model.getPublic_leave());
+                            mTVrole.setText(model.getRole());
                         }
                     }
 
@@ -190,6 +220,7 @@ public class RegisterStaff_Activity extends AppCompatActivity implements View.On
         final String mc = editTextMc.getText().toString().trim();
         final String el = editTextEl.getText().toString().trim();
         final String public_leave = editTextPublic.getText().toString().trim();
+        final String user_role = mTVrole.getText().toString().trim();
 
         if (name.isEmpty()) {
             editTextName.setError(getString(R.string.input_error_name));
@@ -253,7 +284,8 @@ public class RegisterStaff_Activity extends AppCompatActivity implements View.On
                                     annual,
                                     mc,
                                     el,
-                                    public_leave
+                                    public_leave,
+                                    user_role
                             );
                             save(model, new DatabaseReference.CompletionListener() {
                                 @Override
@@ -296,11 +328,16 @@ public class RegisterStaff_Activity extends AppCompatActivity implements View.On
     }
 
     @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-           // case R.id.button_register:
-               // registerUser();
-               // break;
-        }
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        // On selecting a spinner item
+        String item = parent.getItemAtPosition(position).toString();
+        mTVrole.setText(item);
+
+        // Showing selected spinner item
+        Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
+    }
+    public void onNothingSelected(AdapterView<?> arg0) {
+        // TODO Auto-generated method stub
+
     }
 }

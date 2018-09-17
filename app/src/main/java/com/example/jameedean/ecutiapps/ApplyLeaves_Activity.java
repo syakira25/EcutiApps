@@ -4,20 +4,15 @@ import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.nfc.Tag;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -25,10 +20,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.jameedean.ecutiapps.adapter.StaffAdapter;
 import com.example.jameedean.ecutiapps.data.Reference;
 import com.example.jameedean.ecutiapps.model.ApplyLeaves_Model;
-import com.example.jameedean.ecutiapps.model.Staff;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -37,17 +30,20 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.security.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class ApplyLeaves_Activity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
     private TextView mTVemail;
     private TextView mTVname;
-    private TextView mTVmc, mTVAL, mTVEL, mTVPc, mTVtotal;
+    private TextView mTVAL, mTVtotal;
     private TextView mItemSelected;
     private EditText mTVreasons;
     private Spinner mTypeButton;
@@ -55,6 +51,8 @@ public class ApplyLeaves_Activity extends AppCompatActivity implements AdapterVi
     int month, month2;
     int day, day2;
 
+    Date startDate;
+    Date endDate;
     // Firebase Authentication
     private String mId;
     private DatabaseReference mReference, mReference1, mReference2;
@@ -67,7 +65,20 @@ public class ApplyLeaves_Activity extends AppCompatActivity implements AdapterVi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_applyleaves);
+
+        setContentView(R.layout.activity_apply);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        if(getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onBackPressed();
+                }
+            });
+        }
 
         //Get Firebase auth instance
         mFirebaseAuth = FirebaseAuth.getInstance();
@@ -139,7 +150,6 @@ public class ApplyLeaves_Activity extends AppCompatActivity implements AdapterVi
     }
     public void onNothingSelected(AdapterView<?> arg0) {
         // TODO Auto-generated method stub
-
     }
 
     @Override
@@ -151,8 +161,7 @@ public class ApplyLeaves_Activity extends AppCompatActivity implements AdapterVi
             public void onDataChange(DataSnapshot dataSnapshot) {
                mTVname.setText(dataSnapshot.child("name").getValue().toString());
                mTVemail.setText(dataSnapshot.child("email").getValue().toString());
-               mTVAL.setText("ANNUAL LEAVES : "+dataSnapshot.child("annual").getValue().toString()+"\n\n"+ "MEDICAL LEAVE : "+dataSnapshot.child("mc").getValue().toString());
-               //mTVname.setText(dataSnapshot.getValue().toString());
+               mTVAL.setText("\n"+"ANNUAL LEAVES : "+dataSnapshot.child("annual").getValue().toString()+"\n\n"+ "MEDICAL LEAVE : "+dataSnapshot.child("mc").getValue().toString()+"\n\n"+"EMERGENCY LEAVE : "+dataSnapshot.child("el").getValue().toString()+"\n\n"+"PUBLIC HOLIDAY : "+dataSnapshot.child("public_leave").getValue().toString());
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -182,12 +191,29 @@ public class ApplyLeaves_Activity extends AppCompatActivity implements AdapterVi
         }
 
         public void onDateSet (DatePicker view, int year2, int month2, int day2){
+            month2++;
             //displayCurrentTime.setText(String.valueOf(year)+"-"+String.valueOf(month)+"-"+String.valueOf(day));
             displayCurrentTime2.setText(String.valueOf(day2)+"-"+String.valueOf(month2)+"-"+String.valueOf(year2));
+            SimpleDateFormat dateParser = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+            String x =String.valueOf(day2)+"/"+String.valueOf(month2)+"/"+String.valueOf(year2);
+            Log.i("End",x);
+            try {
+                endDate = dateParser.parse(x);
+                Log.i("s",String.valueOf(startDate.getTime()));
+                Log.i("e",String.valueOf(endDate.getTime()));
+                Date dayAfter = new Date(endDate.getTime() + TimeUnit.DAYS.toMillis(1));
+                Log.i("e",String.valueOf(dayAfter.getTime()));
+                Long y = dayAfter.getTime() -startDate.getTime();
+
+                Long j  =   TimeUnit.DAYS.convert(y, TimeUnit.MILLISECONDS);
+
+                Log.i("Diff",String.valueOf(j));
+                mTVtotal.setText(String.valueOf(j));
+            }catch (Exception exception){
+                Log.e("Sistem","tarikh = "+startDate);
+            }
         }
-
     }
-
     @SuppressLint("ValidFragment")
     public class DatePickerFragement extends DialogFragment implements DatePickerDialog.OnDateSetListener{
 
@@ -200,10 +226,18 @@ public class ApplyLeaves_Activity extends AppCompatActivity implements AdapterVi
 
             return new DatePickerDialog(getActivity(), this, year, month, day);
         }
-
         public void onDateSet (DatePicker view, int year, int month, int day){
+            month++;
             displayCurrentTime.setText(String.valueOf(day)+"-"+String.valueOf(month)+"-"+String.valueOf(year));
-            //displayCurrentTime2.setText(String.valueOf(year2)+"-"+String.valueOf(month2)+"-"+String.valueOf(day2));
+            //dipsplayCurrentTime2.setText(String.valueOf(year2)+"-"+String.valueOf(month2)+"-"+String.valueOf(day2));
+            SimpleDateFormat dateParser = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+            String x =String.valueOf(day)+"/"+String.valueOf(month)+"/"+String.valueOf(year);
+            Log.i("Start",x);
+            try {
+                startDate = dateParser.parse(x);
+            }catch (Exception exception){
+                Log.e("Sistem","tarikh = "+startDate);
+            }
         }
     }
 
@@ -239,10 +273,10 @@ public class ApplyLeaves_Activity extends AppCompatActivity implements AdapterVi
                         mTVname.getText().toString(),
                         mTVemail.getText().toString(),
                         mItemSelected.getText().toString(),
-                        mTVtotal.getText().toString(),
                         displayCurrentTime.getText().toString(),
                         displayCurrentTime2.getText().toString(),
-                        mTVreasons.getText().toString()
+                        mTVreasons.getText().toString(),
+                        mTVtotal.getText().toString()
 
                 );
 
@@ -276,26 +310,9 @@ public class ApplyLeaves_Activity extends AppCompatActivity implements AdapterVi
                       DatabaseReference.CompletionListener listener) {
 
         if(mId == null) {
-            // generate id
+//             generate id
             mId = mReference2.push().getKey();
-
-            int Days = 0;
-            if(month2 == month){
-                if(day2>day){
-                    Days = day2 - day;
-                }
-            }
-            else if(month2>month){
-                if(day2>day){
-                    int m = month2-month;
-                    Days = m*30 + (day2 - day);
-                }
-            }
-            else
-                Toast.makeText(this,"Invalid Out Date",Toast.LENGTH_LONG).show();
-            mTVtotal.setText(String.valueOf(Days) + " Days");
         }
-
 
         mReference2.child(mId).setValue(model, listener);
     }

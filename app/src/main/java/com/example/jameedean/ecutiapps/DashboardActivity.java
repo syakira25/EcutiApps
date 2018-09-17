@@ -8,17 +8,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
 
 public class DashboardActivity extends AppCompatActivity {
 
     private CardView btn_adduser;
     private CardView btn_apply;
     private CardView btn_approve;
+    private CardView btn_viewstatus;
 
     // Firebase Authentication
     private FirebaseAuth mFirebaseAuth;
@@ -35,6 +33,8 @@ public class DashboardActivity extends AppCompatActivity {
         btn_adduser = (CardView) findViewById(R.id.adduserId);
         btn_apply = (CardView) findViewById(R.id.applyId);
         btn_approve = (CardView) findViewById(R.id.approveId);
+        btn_viewstatus = (CardView) findViewById(R.id.viewId);
+
 
         btn_adduser.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,7 +53,14 @@ public class DashboardActivity extends AppCompatActivity {
         btn_approve.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(DashboardActivity.this, ApproveActivity.class));
+                startActivity(new Intent(DashboardActivity.this, ApproveMainActivity.class));
+            }
+        });
+
+        btn_viewstatus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(DashboardActivity.this, ViewStatusMainActivity.class));
             }
         });
     }

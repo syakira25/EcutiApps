@@ -149,4 +149,32 @@
         android:background="@drawable/roundedcorner"
         android:padding="5dp" />
 
+    <TextView
+        android:id="@+id/role_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/pc_leaves"
+        android:fontFamily="@font/ftv_font"
+        android:padding="10dp"
+        android:text="USER ROLE : " />
+
+    <TextView
+        android:id="@+id/role_leaves"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/pc_textView"
+        android:layout_marginTop="12dp"
+        android:padding="5dp"
+        android:fontFamily="@font/ftv_font"/>
+
+    <Spinner
+        android:id="@+id/userrole"
+        android:layout_width="20dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/role_leaves"
+        android:spinnerMode="dialog" />
+
 </RelativeLayout>

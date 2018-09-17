@@ -5,7 +5,7 @@
     <color name="transparent">#00000000</color>
     <color name="textColor">#6e6e6e</color>
     <color name="colorPrimary">#e74c3c</color>
-    <color name="colorPrimaryDark">#ec7063</color>
+    <color name="colorPrimaryDark">#e74c3c</color>
     <color name="colorAccent">#f93283</color>
     <color name="purple">#7c4dff</color>
     <color name="yellow">#ffb300</color>

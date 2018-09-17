@@ -1,13 +1,262 @@
 package com.example.jameedean.ecutiapps;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
-public class ApproveActivity extends AppCompatActivity {
+import com.example.jameedean.ecutiapps.data.Reference;
+import com.example.jameedean.ecutiapps.model.ApplyLeaves_Model;
+import com.example.jameedean.ecutiapps.model.Approve;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
-    protected void OnCreate(Bundle savedInstanceState){
+import java.util.ArrayList;
+import java.util.List;
+
+public class ApproveActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
+
+    private TextView mTVemail;
+    private TextView mTVname;
+    private TextView mTVAL, mTVtotal;
+    private TextView mItemSelected, mTVstatus;
+    private TextView mTVreasons;
+    private Spinner status;
+
+    // Firebase Authentication
+    private String mId;
+    private DatabaseReference mReference, mReference1, mReference2;
+    private FirebaseAuth mFirebaseAuth;
+    private FirebaseUser mCurrentUser;
+
+    protected  static TextView displayCurrentTime;
+    protected  static TextView displayCurrentTime2;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_approve);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        if(getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
+        //Get Firebase auth instance
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mCurrentUser = mFirebaseAuth.getCurrentUser();
+
+        mTVname = (TextView)findViewById(R.id.name_field);
+        mTVemail = (TextView)findViewById(R.id.displayed_email);
+        mTVAL = (TextView) findViewById(R.id.displayed_totalLeves);
+        mTVreasons = (TextView) findViewById(R.id.et_description);
+        mItemSelected = (TextView) findViewById(R.id.displayed_typesleave);
+        status = (Spinner)findViewById(R.id.btnStatus);
+        mTVtotal =  (TextView) findViewById(R.id.displayed_total);
+        mTVstatus = (TextView) findViewById(R.id.displayed_status);
+        displayCurrentTime = (TextView)findViewById(R.id.selected_time);
+        displayCurrentTime2 = (TextView)findViewById(R.id.selected_time2);
+
+        // Spinner click listener
+        status.setOnItemSelectedListener(this);
+
+        // Spinner Drop down elements
+        List<String> categories = new ArrayList<String>();
+        categories.add("Approve");
+        categories.add("Rejected");
+        categories.add("Processing");
+        categories.add("Under Consideration");
+
+        // Creating adapter for spinner
+        status.setPrompt("Status Leaves Staff");
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,categories);
+
+        // Drop down layout style - list view with radio button
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // attaching data adapter to spinner
+        status.setAdapter(dataAdapter);
+
+//        mReference = FirebaseDatabase.getInstance().getReference(Reference.USER_DB);
+//        mReference1 = mReference.child(mCurrentUser.getUid());
+//        mReference2 = FirebaseDatabase.getInstance().getReference(mCurrentUser.getUid()).child(Reference.LEAVES_RECORD);
+        DatabaseReference mReference2 = FirebaseDatabase.getInstance().getReference();
+
+        Intent intent = getIntent();
+        // Load record
+        if(intent != null) {
+            mId = intent.getStringExtra(Reference.LEAVES_ID);
+            if(mId != null) {
+                mReference2.child(mId).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        ApplyLeaves_Model model = dataSnapshot.getValue(ApplyLeaves_Model.class);
+                        if(model != null) {
+                            mTVname.setText(model.getName());
+                            mTVemail.setText(model.getEmail());
+                            mItemSelected.setText(model.getTypes_leave());
+                            displayCurrentTime.setText(model.getDate_start());
+                            displayCurrentTime2.setText(model.getDate_end());
+                            mTVtotal.setText(model.getTotal_leave());
+                            mTVreasons.setText(model.getMessage());
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // listening for changes
+//        mReference1.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+   //             mTVname.setText(dataSnapshot.child("name").getValue().toString());
+  //              mTVemail.setText(dataSnapshot.child("email").getValue().toString());
+ //               mTVAL.setText("ANNUAL LEAVES : "+dataSnapshot.child("annual").getValue().toString()+"\n\n"+ "MEDICAL LEAVE : "+dataSnapshot.child("mc").getValue().toString());
+//                mItemSelected.setText(dataSnapshot.child("type_leave").getValue().toString());
+//                displayCurrentTime.setText(dataSnapshot.child("date_start").getValue().toString());
+//                displayCurrentTime2.setText(dataSnapshot.child("date_end").getValue().toString());
+//                mTVreasons.setText(dataSnapshot.child("message").getValue().toString());
+//
+
+
+//            }
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//                 stop listening
+//                Toast.makeText(getApplicationContext(),"Network ERROR. Please check your connection", Toast.LENGTH_LONG).show();
+//            }
+//        });
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+
+        MenuItem item = menu.findItem(R.id.action_delete);
+
+        if(mId == null) {
+            item.setEnabled(false);
+            item.setVisible(false);
+        } else {
+            item.setEnabled(true);
+            item.setVisible(true);
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_staff, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.action_save:
+                // What to do when save
+                Approve model = new Approve(
+                        mTVname.getText().toString(),
+                        mTVemail.getText().toString(),
+                        mTVAL.getText().toString(),
+                        mItemSelected.getText().toString(),
+                        displayCurrentTime.getText().toString(),
+                        displayCurrentTime2.getText().toString(),
+                        mTVreasons.getText().toString(),
+                        mTVtotal.getText().toString(),
+                        mTVstatus.getText().toString()
+                );
+
+                save(model, new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                        actionNotification(databaseError, R.string.done_saved);
+                    }
+                });
+                break;
+            case R.id.action_delete:
+                if(!mId.isEmpty()) {
+                    mReference2.child(mId).removeValue(new DatabaseReference.CompletionListener() {
+                        @Override
+                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                            actionNotification(databaseError, R.string.done_deleted2);
+                        }
+                    });
+                }
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    /***
+     * Save record to firebase
+     * @param model
+     */
+    private void save(Approve model,
+                      DatabaseReference.CompletionListener listener) {
+
+        if(mId == null) {
+            // generate id
+            mId = mReference2.push().getKey();
+        }
+
+
+        mReference2.child(mId).setValue(model, listener);
+    }
+
+    private void actionNotification(DatabaseError error, int successResourceId) {
+        // close activity
+        if(error == null) {
+            Toast.makeText(ApproveActivity.this, successResourceId, Toast.LENGTH_SHORT).show();
+            finish();
+        } else {
+            Toast.makeText(ApproveActivity.this, error.getCode(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        // On selecting a spinner item
+        String item = parent.getItemAtPosition(position).toString();
+        mTVstatus.setText(item);
+
+        // Showing selected spinner item
+        Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
+    }
+    public void onNothingSelected(AdapterView<?> arg0) {
+        // TODO Auto-generated method stub
 
     }
 }

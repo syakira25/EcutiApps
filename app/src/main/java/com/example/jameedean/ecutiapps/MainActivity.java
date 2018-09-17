@@ -19,11 +19,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.jameedean.ecutiapps.data.Reference;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity implements TextWatcher, CompoundButton.OnCheckedChangeListener {
 
@@ -41,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements TextWatcher, Comp
 
     // firebase
     private FirebaseAuth firebaseAuth;
+    private DatabaseReference mReference, mReference1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +117,7 @@ public class MainActivity extends AppCompatActivity implements TextWatcher, Comp
             }
         });
     }
+
     private void successLog()
     {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();

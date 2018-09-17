@@ -11,32 +11,21 @@ public class ApplyLeaves_Model{
     private String date_start;
     private String date_end;
     private String message;
-    private String total;
+    private String total_leave;
 
     public ApplyLeaves_Model() {
         // This is default constructor.
     }
 
-    public ApplyLeaves_Model(String name, String email, String types_leave, String date_start,String date_end, String message, String total){
+    public ApplyLeaves_Model(String name, String email, String types_leave, String date_start,String date_end, String message, String total_leave){
         this.name = name;
         this.email = email;
         this.types_leave = types_leave;
         this.date_start = date_start;
         this.date_end = date_end;
         this.message = message;
-        this.total = total;
+        this.total_leave = total_leave;
     }
-    public String getDate_start() {
-        return date_start;
-    }
-
-    public void setDate_start(String date_start) {
-        this.date_start= date_start;
-    }
-
-    public String getDate_end(){return date_end;}
-
-    public void setDate_end(String date_end){this.date_end=date_end;}
 
     public String getName() {
         return name;
@@ -50,6 +39,22 @@ public class ApplyLeaves_Model{
 
     public void setEmail(String email){this.email = email;}
 
+    public String getTypes_leave(){return types_leave;}
+
+    public void setTypes_leave(String types_leave){this.types_leave=types_leave;}
+
+    public String getDate_start() {
+        return date_start;
+    }
+
+    public void setDate_start(String date_start) {
+        this.date_start= date_start;
+    }
+
+    public String getDate_end(){return date_end;}
+
+    public void setDate_end(String date_end){this.date_end=date_end;}
+
     public String getMessage() {
         return message;
     }
@@ -58,12 +63,8 @@ public class ApplyLeaves_Model{
         this.message = message;
     }
 
-    public String getTypes_leave(){return types_leave;}
+    public String getTotal_leave(){return total_leave;}
 
-    public void setTypes_leave(String types_leave){this.types_leave=types_leave;}
-
-    public String getTotal(){return total;}
-
-    public void setTotal(String total){this.total=total;}
+    public void setTotal_leave(String total_leave){this.total_leave=total_leave;}
 
 }
