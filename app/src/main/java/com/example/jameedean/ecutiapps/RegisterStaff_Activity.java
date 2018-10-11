@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -47,7 +48,7 @@ public class RegisterStaff_Activity extends AppCompatActivity implements Adapter
     private String mId;
 
     // Firebase Authentication
-    private DatabaseReference mReference;
+    private DatabaseReference mReference,mReference1, mReference2;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mCurrentUser;
 
@@ -84,8 +85,9 @@ public class RegisterStaff_Activity extends AppCompatActivity implements Adapter
         // Spinner Drop down elements
         List<String> categories = new ArrayList<String>();
         categories.add("Admin");
-        categories.add("Management");
+        //categories.add("Management");
         categories.add("Staff");
+        categories.add("Others");
 
         // Creating adapter for spinner
         roleuser.setPrompt("Status Leaves Staff");
@@ -98,6 +100,8 @@ public class RegisterStaff_Activity extends AppCompatActivity implements Adapter
         roleuser.setAdapter(dataAdapter);
 
         mReference = FirebaseDatabase.getInstance().getReference(mCurrentUser.getUid()).child(Reference.USER_DB);
+        mReference1 = FirebaseDatabase.getInstance().getReference(Reference.USER_DB);
+        mReference2 = mReference1.child(mCurrentUser.getUid());
 
         Intent intent = getIntent();
         // Load record
@@ -169,6 +173,7 @@ public class RegisterStaff_Activity extends AppCompatActivity implements Adapter
         switch (item.getItemId()) {
             case R.id.action_save:
                 registerUser();
+                sendEmailVerification();
                 break;
             case R.id.action_delete:
                 if(!mId.isEmpty()) {
@@ -294,7 +299,7 @@ public class RegisterStaff_Activity extends AppCompatActivity implements Adapter
                                 }
                             });
 
-                            FirebaseDatabase.getInstance().getReference("Users")
+                            FirebaseDatabase.getInstance().getReference("Users").child(Reference.USER_INFO)
                                     .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                     .setValue(model).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
@@ -338,6 +343,36 @@ public class RegisterStaff_Activity extends AppCompatActivity implements Adapter
     }
     public void onNothingSelected(AdapterView<?> arg0) {
         // TODO Auto-generated method stub
+
+    }
+
+    private void sendEmailVerification(){
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    // email sent
+
+                    Toast.makeText(RegisterStaff_Activity.this,"Check your email to verify.",Toast.LENGTH_LONG).show();
+                    // after email is sent just logout the user and finish this activity
+                    FirebaseAuth.getInstance().signOut();
+                    startActivity(new Intent(RegisterStaff_Activity.this, MainActivity.class));
+                    finish();
+                }
+                else
+                {
+                    // email not sent, so display message and restart the activity or do whatever you wish to do
+
+                    //restart this activity
+                    overridePendingTransition(0, 0);
+                    finish();
+                    overridePendingTransition(0, 0);
+                    startActivity(getIntent());
+
+                }
+            }
+        });
 
     }
 }

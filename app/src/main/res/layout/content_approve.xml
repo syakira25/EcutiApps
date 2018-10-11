@@ -54,26 +54,6 @@
         android:fontFamily="@font/ftv_font"/>
 
     <TextView
-        android:id="@+id/totalLeaves_textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/ftv_font"
-        android:padding="@dimen/standard_padding"
-        android:text="Total Leaves Left :"
-        android:textStyle="bold|italic"
-        android:layout_below="@+id/email_textView"/>
-
-    <TextView
-        android:id="@+id/displayed_totalLeves"
-        android:layout_width="230dp"
-        android:layout_height="100dp"
-        android:layout_alignBaseline="@+id/totalLeaves_textView"
-        android:layout_alignBottom="@+id/totalLeaves_textView"
-        android:layout_toEndOf="@+id/date_leaveStart"
-        android:fontFamily="@font/ftv_font"
-        android:textStyle="bold|italic" />
-
-    <TextView
         android:id="@+id/type_leave"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -81,7 +61,7 @@
         android:padding="@dimen/standard_padding"
         android:text="Types of leave :"
         android:textStyle="bold|italic"
-        android:layout_below="@+id/totalLeaves_textView"/>
+        android:layout_below="@+id/email_textView"/>
 
     <TextView
         android:id="@+id/displayed_typesleave"

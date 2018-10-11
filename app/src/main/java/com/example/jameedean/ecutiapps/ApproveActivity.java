@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 import com.example.jameedean.ecutiapps.data.Reference;
 import com.example.jameedean.ecutiapps.model.ApplyLeaves_Model;
 import com.example.jameedean.ecutiapps.model.Approve;
+import com.example.jameedean.ecutiapps.model.Staff;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -27,23 +29,44 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ApproveActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
+public class ApproveActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     private TextView mTVemail;
     private TextView mTVname;
-    private TextView mTVAL, mTVtotal;
+    private TextView mTVtotal;
     private TextView mItemSelected, mTVstatus;
     private TextView mTVreasons;
     private Spinner status;
 
     // Firebase Authentication
     private String mId;
-    private DatabaseReference mReference, mReference1, mReference2;
+    /**
+     * user info
+     */
+    private DatabaseReference mReference1;
+    /**
+     * leave
+     */
+    private DatabaseReference mReference2;
+    private DatabaseReference mReference3;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mCurrentUser;
 
-    protected  static TextView displayCurrentTime;
-    protected  static TextView displayCurrentTime2;
+    protected static TextView displayCurrentTime;
+    protected static TextView displayCurrentTime2;
+
+    private String UID;
+
+    //emergency
+    int el = 0;
+    // anuall leave
+    int al = 0;
+    // medical
+    int medical = 0;
+    // public  holiday
+    int pb = 0;
+
+    String leaveType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +76,7 @@ public class ApproveActivity extends AppCompatActivity implements AdapterView.On
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        if(getSupportActionBar() != null) {
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
@@ -61,16 +84,15 @@ public class ApproveActivity extends AppCompatActivity implements AdapterView.On
         mFirebaseAuth = FirebaseAuth.getInstance();
         mCurrentUser = mFirebaseAuth.getCurrentUser();
 
-        mTVname = (TextView)findViewById(R.id.name_field);
-        mTVemail = (TextView)findViewById(R.id.displayed_email);
-        mTVAL = (TextView) findViewById(R.id.displayed_totalLeves);
+        mTVname = (TextView) findViewById(R.id.name_field);
+        mTVemail = (TextView) findViewById(R.id.displayed_email);
         mTVreasons = (TextView) findViewById(R.id.et_description);
         mItemSelected = (TextView) findViewById(R.id.displayed_typesleave);
-        status = (Spinner)findViewById(R.id.btnStatus);
-        mTVtotal =  (TextView) findViewById(R.id.displayed_total);
+        status = (Spinner) findViewById(R.id.btnStatus);
+        mTVtotal = (TextView) findViewById(R.id.displayed_total);
         mTVstatus = (TextView) findViewById(R.id.displayed_status);
-        displayCurrentTime = (TextView)findViewById(R.id.selected_time);
-        displayCurrentTime2 = (TextView)findViewById(R.id.selected_time2);
+        displayCurrentTime = (TextView) findViewById(R.id.selected_time);
+        displayCurrentTime2 = (TextView) findViewById(R.id.selected_time2);
 
         // Spinner click listener
         status.setOnItemSelectedListener(this);
@@ -84,7 +106,7 @@ public class ApproveActivity extends AppCompatActivity implements AdapterView.On
 
         // Creating adapter for spinner
         status.setPrompt("Status Leaves Staff");
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,categories);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
 
         // Drop down layout style - list view with radio button
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -92,21 +114,20 @@ public class ApproveActivity extends AppCompatActivity implements AdapterView.On
         // attaching data adapter to spinner
         status.setAdapter(dataAdapter);
 
-//        mReference = FirebaseDatabase.getInstance().getReference(Reference.USER_DB);
-//        mReference1 = mReference.child(mCurrentUser.getUid());
-//        mReference2 = FirebaseDatabase.getInstance().getReference(mCurrentUser.getUid()).child(Reference.LEAVES_RECORD);
-        DatabaseReference mReference2 = FirebaseDatabase.getInstance().getReference();
+        mReference1 = FirebaseDatabase.getInstance().getReference(Reference.USER_DB + "/" + Reference.USER_INFO);
+        mReference2 = FirebaseDatabase.getInstance().getReference(Reference.LEAVES_RECORD);
+        mReference3 = FirebaseDatabase.getInstance().getReference(mCurrentUser.getUid()).child(Reference.LEAVES_RECORD);
 
         Intent intent = getIntent();
         // Load record
-        if(intent != null) {
+        if (intent != null) {
             mId = intent.getStringExtra(Reference.LEAVES_ID);
-            if(mId != null) {
+            if (mId != null) {
                 mReference2.child(mId).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         ApplyLeaves_Model model = dataSnapshot.getValue(ApplyLeaves_Model.class);
-                        if(model != null) {
+                        if (model != null) {
                             mTVname.setText(model.getName());
                             mTVemail.setText(model.getEmail());
                             mItemSelected.setText(model.getTypes_leave());
@@ -114,7 +135,7 @@ public class ApproveActivity extends AppCompatActivity implements AdapterView.On
                             displayCurrentTime2.setText(model.getDate_end());
                             mTVtotal.setText(model.getTotal_leave());
                             mTVreasons.setText(model.getMessage());
-
+                            UID = model.getUid();
                         }
                     }
 
@@ -127,31 +148,28 @@ public class ApproveActivity extends AppCompatActivity implements AdapterView.On
         }
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        // listening for changes
-//        mReference1.addValueEventListener(new ValueEventListener() {
-//            @Override
+//    @Override
+//  protected void onStart() {
+//      super.onStart();
+//         listening for changes
+//      mReference2.addValueEventListener(new ValueEventListener() {
+//          @Override
 //            public void onDataChange(DataSnapshot dataSnapshot) {
-   //             mTVname.setText(dataSnapshot.child("name").getValue().toString());
-  //              mTVemail.setText(dataSnapshot.child("email").getValue().toString());
- //               mTVAL.setText("ANNUAL LEAVES : "+dataSnapshot.child("annual").getValue().toString()+"\n\n"+ "MEDICAL LEAVE : "+dataSnapshot.child("mc").getValue().toString());
+//                mTVname.setText(dataSnapshot.child("name").getValue().toString());
+//                mTVemail.setText(dataSnapshot.child("email").getValue().toString());
 //                mItemSelected.setText(dataSnapshot.child("type_leave").getValue().toString());
 //                displayCurrentTime.setText(dataSnapshot.child("date_start").getValue().toString());
 //                displayCurrentTime2.setText(dataSnapshot.child("date_end").getValue().toString());
 //                mTVreasons.setText(dataSnapshot.child("message").getValue().toString());
-//
-
-
-//            }
-//            @Override
+//                mTVstatus.setText(dataSnapshot.child("status").getValue().toString());
+//        }
+//        @Override
 //            public void onCancelled(DatabaseError databaseError) {
-//                 stop listening
+//                stop listening
 //                Toast.makeText(getApplicationContext(),"Network ERROR. Please check your connection", Toast.LENGTH_LONG).show();
-//            }
-//        });
-    }
+//           }
+//});
+//    }
 
     @Override
     protected void onStop() {
@@ -163,7 +181,7 @@ public class ApproveActivity extends AppCompatActivity implements AdapterView.On
 
         MenuItem item = menu.findItem(R.id.action_delete);
 
-        if(mId == null) {
+        if (mId == null) {
             item.setEnabled(false);
             item.setVisible(false);
         } else {
@@ -182,21 +200,45 @@ public class ApproveActivity extends AppCompatActivity implements AdapterView.On
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+//        Log.e("harimau",item.toString());
+//        if(item.toString().equals("Save")){
+//            Log.e("ada","masuk");
+//            Log.e("ada",mTVstatus.getText().toString());
 
+//            Approve model = new Approve(
+//                    mTVname.getText().toString(),
+//                    mTVemail.getText().toString(),
+//                    mItemSelected.getText().toString(),
+//                    displayCurrentTime.getText().toString(),
+//                    displayCurrentTime2.getText().toString(),
+//                    mTVreasons.getText().toString(),
+//                    mTVtotal.getText().toString(),
+//                    mTVstatus.getText().toString()
+//            );
+//            Log.e("mVStatus",model.getStatus());
+//
+//            save(model, new DatabaseReference.CompletionListener() {
+//                @Override
+//                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+//                    actionNotification(databaseError, R.string.done_saved);
+//                }
+//            });
+//        }
         switch (item.getItemId()) {
-            case R.id.action_save:
+            case R.id.menu_staff_action_save:
                 // What to do when save
                 Approve model = new Approve(
                         mTVname.getText().toString(),
                         mTVemail.getText().toString(),
-                        mTVAL.getText().toString(),
                         mItemSelected.getText().toString(),
                         displayCurrentTime.getText().toString(),
                         displayCurrentTime2.getText().toString(),
                         mTVreasons.getText().toString(),
                         mTVtotal.getText().toString(),
-                        mTVstatus.getText().toString()
+                        mTVstatus.getText().toString(),
+                        UID
                 );
+                Log.e("mVStatus", model.getStatus());
 
                 save(model, new DatabaseReference.CompletionListener() {
                     @Override
@@ -206,7 +248,7 @@ public class ApproveActivity extends AppCompatActivity implements AdapterView.On
                 });
                 break;
             case R.id.action_delete:
-                if(!mId.isEmpty()) {
+                if (!mId.isEmpty()) {
                     mReference2.child(mId).removeValue(new DatabaseReference.CompletionListener() {
                         @Override
                         public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -215,8 +257,11 @@ public class ApproveActivity extends AppCompatActivity implements AdapterView.On
                     });
                 }
                 break;
+            default:
+                return super.onOptionsItemSelected(item);
         }
 
+        //return false;
         return super.onOptionsItemSelected(item);
     }
 
@@ -226,19 +271,233 @@ public class ApproveActivity extends AppCompatActivity implements AdapterView.On
      */
     private void save(Approve model,
                       DatabaseReference.CompletionListener listener) {
+        final Approve fn = model;
 
-        if(mId == null) {
+        if (mId == null) {
             // generate id
             mId = mReference2.push().getKey();
+            //   Intent intent = new Intent();
+            //mId = intent.getStringExtra(Reference.LEAVES_ID);
+
+        }
+        if (fn.getStatus().equals("Rejected")) {
+
+        } else {
+            Log.e("uid", UID);
+
+            ValueEventListener valueEventListener = new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Staff modelStaff = dataSnapshot.getValue(Staff.class);
+                    Log.e("snapshot", dataSnapshot.toString());
+                    //emergency
+                    el = Integer.valueOf(modelStaff.getEl());
+                    // anuall leave
+                    al = Integer.valueOf(modelStaff.getAnnual());
+                    // medical
+                    medical = Integer.valueOf(modelStaff.getMc());
+                    // public  holiday
+                    pb = Integer.valueOf(modelStaff.getPublic_leave());
+                    leaveType =  fn.getTypes_leave();
+
+                    switch (leaveType) {
+                        case "Annual Leaves":
+                            Log.e("bal", String.valueOf(al));
+
+                            String alx = String.valueOf(al - Integer.valueOf(fn.getTotal()));
+                            Log.e("bfw", String.valueOf(alx));
+
+                            try {
+                                FirebaseDatabase fireBaseUpdateYear = FirebaseDatabase.getInstance();
+                                DatabaseReference fireBaseYear = fireBaseUpdateYear.getReference(Reference.USER_DB + "/" + Reference.USER_INFO + "/" + UID + "/annual");
+                                DatabaseReference fireBaseYear2 = fireBaseUpdateYear.getReference(mCurrentUser.getUid() + "/" + Reference.LEAVES_RECORD + "/" + "/annual");
+                                Log.e("al", (Reference.USER_DB + "/" + Reference.USER_INFO + "/" + UID + "/annual"));
+                                fireBaseYear.setValue(alx,new DatabaseReference.CompletionListener(){
+                                    @Override
+                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference){
+                                        if(databaseError != null){
+                                            Log.e("dbe",databaseError.getMessage());
+                                        }else{
+                                            Log.e("db","boleh save");
+                                        }
+                                    }
+
+                                });
+                                fireBaseYear2.setValue(alx,new DatabaseReference.CompletionListener(){
+                                    @Override
+                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference){
+                                        if(databaseError != null){
+                                            Log.e("dbe",databaseError.getMessage());
+                                        }else{
+                                            Log.e("db","boleh save");
+                                        }
+                                    }
+
+                                });
+                            } catch (Exception exception) {
+                                Log.e("al", exception.getMessage());
+                                Log.e("al", (Reference.USER_DB + "/" + Reference.USER_INFO + "/" + UID + "/annual"));
+
+                            }
+                            //fireBaseUpdateYear.goOffline();
+                            break;
+                        case "Emergency Leaves":
+                            Log.e("bal", String.valueOf(el));
+                            String elx = (String.valueOf(el - Integer.valueOf(fn.getTotal())));
+                            Log.e("bfw", String.valueOf(elx));
+                            final FirebaseDatabase fireBaseUpdateLeave = FirebaseDatabase.getInstance();
+                            DatabaseReference fireBaseLeave = fireBaseUpdateLeave.getReference(Reference.USER_DB + "/" + Reference.USER_INFO + "/" + UID + "/el");
+                            DatabaseReference fireBaseLeave2 = fireBaseUpdateLeave.getReference(mCurrentUser.getUid() + "/" + Reference.LEAVES_RECORD + "/" + "/el");
+                            try {
+                                fireBaseLeave.setValue(elx,new DatabaseReference.CompletionListener(){
+                                    @Override
+                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference){
+                                        if(databaseError != null){
+                                            Log.e("dbe",databaseError.getMessage());
+                                        }else{
+                                            Log.e("db","boleh save");
+                                        }
+                                    }
+                                });
+                                fireBaseLeave2.setValue(elx,new DatabaseReference.CompletionListener(){
+                                    @Override
+                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference){
+                                        if(databaseError != null){
+                                            Log.e("dbe",databaseError.getMessage());
+                                        }else{
+                                            Log.e("db","boleh save");
+                                        }
+                                    }
+                                });
+                            } catch (Exception exception) {
+                                Log.e("al", exception.getMessage());
+                                Log.e("al", (Reference.USER_DB + "/" + Reference.USER_INFO + "/" + UID + "/el"));
+
+                            }
+                            //fireBaseUpdateLeave.goOffline();
+                            break;
+                        case "Medical Leaves":
+                            Log.e("bal", String.valueOf(medical));
+
+                            String mcx = String.valueOf(medical - Integer.valueOf(fn.getTotal()));
+                            Log.e("bfw", String.valueOf(mcx));
+                            final FirebaseDatabase fireBaseUpdateMedicalLeave = FirebaseDatabase.getInstance();
+
+                            DatabaseReference fireBaseMedicalLeave = fireBaseUpdateMedicalLeave.getReference(Reference.USER_DB + "/" + Reference.USER_INFO + "/" + UID + "/mc");
+                            DatabaseReference fireBaseMedicalLeave2 = fireBaseUpdateMedicalLeave.getReference(mCurrentUser.getUid() + "/" + Reference.LEAVES_RECORD + "/"  + "/mc");
+
+                            try {
+                                fireBaseMedicalLeave.setValue(mcx,new DatabaseReference.CompletionListener(){
+                                    @Override
+                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference){
+                                        if(databaseError != null){
+                                            Log.e("dbe",databaseError.getMessage());
+                                        }else{
+                                            Log.e("db","boleh save");
+                                        }
+                                    }
+
+                                });
+                                fireBaseMedicalLeave2.setValue(mcx,new DatabaseReference.CompletionListener(){
+                                    @Override
+                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference){
+                                        if(databaseError != null){
+                                            Log.e("dbe",databaseError.getMessage());
+                                        }else{
+                                            Log.e("db","boleh save");
+                                        }
+                                    }
+
+                                });
+                            } catch (Exception exception) {
+                                Log.e("al", exception.getMessage());
+                                Log.e("al", (Reference.USER_DB + "/" + Reference.USER_INFO + "/" + UID + "/mc"));
+
+                            }
+                            //fireBaseUpdateMedicalLeave.goOffline();
+                            break;
+                        case "Public Holiday":
+                            Log.e("bal", String.valueOf(pb));
+                            String pbx = (String.valueOf(pb - Integer.valueOf(fn.getTotal())));
+                            Log.e("bfw", String.valueOf(pbx));
+                            final FirebaseDatabase fireBaseUpdatePublicHoliday = FirebaseDatabase.getInstance();
+
+                            DatabaseReference fireBasePublicHoliday = fireBaseUpdatePublicHoliday.getReference(Reference.USER_DB + "/" + Reference.USER_INFO + "/" + UID + "/public_leave");
+                            DatabaseReference fireBasePublicHoliday2 = fireBaseUpdatePublicHoliday.getReference(mCurrentUser.getUid() + "/" + Reference.LEAVES_RECORD + "/"  + "/public_leave");
+                            try {
+                                fireBasePublicHoliday.setValue(pbx,new DatabaseReference.CompletionListener(){
+                                    @Override
+                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference){
+                                        if(databaseError != null){
+                                            Log.e("dbe",databaseError.getMessage());
+                                        }else{
+                                            Log.e("db","boleh save");
+                                        }
+                                    }
+
+                                });
+                                fireBasePublicHoliday2.setValue(pbx,new DatabaseReference.CompletionListener(){
+                                    @Override
+                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference){
+                                        if(databaseError != null){
+                                            Log.e("dbe",databaseError.getMessage());
+                                        }else{
+                                            Log.e("db","boleh save");
+                                        }
+                                    }
+
+                                });
+
+                            } catch (Exception exception) {
+                                Log.e("al", exception.getMessage());
+                                Log.e("al", (Reference.USER_DB + "/" + Reference.USER_INFO + "/" + UID + "/public_leave"));
+                            }
+                            //fireBaseUpdatePublicHoliday.goOffline();
+                            break;
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.e("DB",databaseError.toString());
+                }
+            };
+
+
+           // mReference1.child(UID).addValueEventListener(valueEventListener);
+            mReference1.child(UID).addListenerForSingleValueEvent(valueEventListener);
+          //  mReference1.removeEventListener(valueEventListener);
         }
 
+        mReference2.child(mId).setValue(fn,new DatabaseReference.CompletionListener(){
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference){
+                if(databaseError != null){
+                    Log.e("dbe",databaseError.getMessage());
+                }else{
+                    Log.e("db","boleh save");
+                }
+            }
 
-        mReference2.child(mId).setValue(model, listener);
+        });
+
+        mReference3.child(mId).setValue(fn,new DatabaseReference.CompletionListener(){
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference){
+                if(databaseError != null){
+                    Log.e("dbe",databaseError.getMessage());
+                }else{
+                    Log.e("db","boleh save");
+                }
+            }
+
+        });
     }
 
     private void actionNotification(DatabaseError error, int successResourceId) {
         // close activity
-        if(error == null) {
+        if (error == null) {
             Toast.makeText(ApproveActivity.this, successResourceId, Toast.LENGTH_SHORT).show();
             finish();
         } else {
@@ -255,6 +514,7 @@ public class ApproveActivity extends AppCompatActivity implements AdapterView.On
         // Showing selected spinner item
         Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
     }
+
     public void onNothingSelected(AdapterView<?> arg0) {
         // TODO Auto-generated method stub
 

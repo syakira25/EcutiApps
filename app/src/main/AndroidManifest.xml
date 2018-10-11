@@ -29,6 +29,16 @@
         </activity>
 
         <activity
+            android:name=".DashboardStaffActivity"
+            android:label="Dashboard E-cuti APPS"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.jameedean.ecutiapps.MainActivity" />
+        </activity>
+
+        <activity
             android:name=".StaffMain_Activity"
             android:label="Add Staff Info"
             android:parentActivityName=".MainActivity"
@@ -51,7 +61,7 @@
         <activity
             android:name=".ApplyLeaves_Activity"
             android:label="Apply Leaves"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName=".DashboardActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -96,6 +106,26 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.jameedean.ecutiapps.DashboardActivity" />
+        </activity>
+
+        <activity
+            android:name=".ViewStatus_StaffActivity"
+            android:label="View Status Application"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.jameedean.ecutiapps.DashboardStaffActivity" />
+        </activity>
+
+        <activity
+            android:name=".ViewStatus_Staff"
+            android:label="View Status Application"
+            android:parentActivityName=".ViewStatus_StaffActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.jameedean.ecutiapps.DashboardStaffActivity" />
         </activity>
     </application>
 

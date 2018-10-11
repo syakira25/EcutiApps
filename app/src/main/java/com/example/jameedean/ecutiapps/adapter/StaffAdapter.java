@@ -40,8 +40,6 @@ public class StaffAdapter extends RecyclerView.Adapter<StaffAdapter.StaffViewHol
 
         holder.name.setText(model.getName());
         holder.email.setText(model.getEmail());
-        //holder.password.setText(model.getPassword());
-        //holder.phone.setText(model.getPhone());
         // set description as log
     }
 
@@ -72,9 +70,8 @@ public class StaffAdapter extends RecyclerView.Adapter<StaffAdapter.StaffViewHol
 
     class StaffViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private TextView name, job_position;
+        private TextView name;
         private TextView email, password, phone;
-        private TextView annual, mc, el, public_holiday;
 
         StaffViewHolder(View itemView) {
             super(itemView);
@@ -83,8 +80,6 @@ public class StaffAdapter extends RecyclerView.Adapter<StaffAdapter.StaffViewHol
             email = itemView.findViewById(R.id.tv_email);
             password = itemView.findViewById(R.id.tv_name);
             phone = itemView.findViewById(R.id.tv_name);
-            //annual = itemView.findViewById(R.id.leave_textView2);
-
 
             itemView.setOnClickListener(this);
         }

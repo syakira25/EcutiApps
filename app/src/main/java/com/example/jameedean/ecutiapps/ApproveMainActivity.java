@@ -6,9 +6,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.jameedean.ecutiapps.adapter.ApproveLeaves_Adapter;
 import com.example.jameedean.ecutiapps.adapter.StatusLeaves_Adapter;
@@ -46,7 +48,7 @@ public class ApproveMainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        if(getSupportActionBar() != null) {
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
@@ -73,8 +75,8 @@ public class ApproveMainActivity extends AppCompatActivity {
         recyclerView.setAdapter(mAdapter);
 
         mReference = FirebaseDatabase.getInstance().getReference(Reference.USER_DB);
-        mReference1 = mReference.child(mCurrentUser.getUid());
-        mReference2 = FirebaseDatabase.getInstance().getReference(mCurrentUser.getUid()).child(Reference.LEAVES_RECORD);
+        //mReference1 = mReference.child(mCurrentUser.getUid());
+        mReference2 = FirebaseDatabase.getInstance().getReference(Reference.LEAVES_RECORD);
 
     }
 

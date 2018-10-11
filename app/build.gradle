@@ -35,6 +35,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     compile 'com.android.support:cardview-v7:26.1.0'
     compile 'com.android.support:design:26.1.0'
+    compile 'com.github.scottyab:showhidepasswordedittext:0.6'
 
 }
 apply plugin: 'com.google.gms.google-services'

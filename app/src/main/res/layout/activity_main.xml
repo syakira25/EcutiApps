@@ -17,7 +17,8 @@
         app:cardCornerRadius="10dp"
         app:cardElevation="3dp"
         app:cardPreventCornerOverlap="false"
-        app:cardUseCompatPadding="true">
+        app:cardUseCompatPadding="true"
+        android:id="@+id/cardView">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -113,33 +114,33 @@
                     android:src="@drawable/img_authentication"
                     android:tint="@color/white"/>
 
-                <EditText
-                    android:id="@+id/password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBottom="@+id/imgView_passwordIcon"
-                    android:layout_alignParentTop="true"
-                    android:layout_toRightOf="@+id/imgView_passwordIcon"
-                    android:background="@color/editTextBG"
-                    android:hint="Password"
-                    android:inputType="textPassword"
-                    android:paddingLeft="20dp"
-                    android:textSize="15sp"
-                    android:fontFamily="@font/ftv_font"/>
+                    <EditText
+                        android:id="@+id/password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/imgView_passwordIcon"
+                        android:layout_alignParentTop="true"
+                        android:layout_toRightOf="@+id/imgView_passwordIcon"
+                        android:background="@color/editTextBG"
+                        android:fontFamily="@font/ftv_font"
+                        android:hint="Password"
+                        android:inputType="textPassword"
+                        android:paddingLeft="20dp"
+                        android:textSize="15sp" />
 
             </RelativeLayout>
 
             <CheckBox
                 android:id="@+id/chkBox1"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/relativeLayout2"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                android:layout_marginTop="15dp"
+                android:layout_alignStart="@+id/btn_signIn"
+                android:layout_below="@+id/relativeLayout2"
+                android:layout_marginTop="14dp"
+                android:text="Remember Me"
+                android:textColor="@color/textColor"
                 android:fontFamily="@font/ftv_font"
-                android:text="Remember me"
-                android:textColor="@color/textColor" />
+                tools:ignore="HardcodedText" />
 
             <Button
                 android:id="@+id/btn_signIn"
@@ -155,6 +156,19 @@
                 android:text="SIGN IN"
                 android:textColor="@color/white" />
 
+            <Button
+                android:id="@+id/btn_reset_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:fontFamily="@font/ftv_font"
+                android:text="Forgot Password??"
+                android:textAllCaps="false"
+                android:textColor="#000000"
+                android:layout_below="@id/btn_signIn"
+                android:layout_centerInParent="true"/>
+
         </RelativeLayout>
     </android.support.v7.widget.CardView>
+
 </RelativeLayout>

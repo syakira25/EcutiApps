@@ -53,9 +53,10 @@ public class ApplyLeaves_Activity extends AppCompatActivity implements AdapterVi
 
     Date startDate;
     Date endDate;
+
     // Firebase Authentication
     private String mId;
-    private DatabaseReference mReference, mReference1, mReference2;
+    private DatabaseReference mReference, mReference1, mReference2, mReference3;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mCurrentUser;
 
@@ -135,8 +136,9 @@ public class ApplyLeaves_Activity extends AppCompatActivity implements AdapterVi
         });
 
         mReference = FirebaseDatabase.getInstance().getReference(Reference.USER_DB);
-        mReference1 = mReference.child(mCurrentUser.getUid());
+        mReference1 = mReference.child(Reference.USER_INFO).child(mCurrentUser.getUid());
         mReference2 = FirebaseDatabase.getInstance().getReference(mCurrentUser.getUid()).child(Reference.LEAVES_RECORD);
+        mReference3 = FirebaseDatabase.getInstance().getReference(Reference.LEAVES_RECORD);
     }
 
     @Override
@@ -187,7 +189,6 @@ public class ApplyLeaves_Activity extends AppCompatActivity implements AdapterVi
             day2 = c2.get(Calendar.DAY_OF_MONTH);
 
             return new DatePickerDialog(getActivity(), this, year2, month2, day2);
-
         }
 
         public void onDateSet (DatePicker view, int year2, int month2, int day2){
@@ -267,7 +268,7 @@ public class ApplyLeaves_Activity extends AppCompatActivity implements AdapterVi
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
-            case R.id.action_save:
+            case R.id.menu_staff_action_save:
                 // What to do when save
                 ApplyLeaves_Model model = new ApplyLeaves_Model(
                         mTVname.getText().toString(),
@@ -276,8 +277,8 @@ public class ApplyLeaves_Activity extends AppCompatActivity implements AdapterVi
                         displayCurrentTime.getText().toString(),
                         displayCurrentTime2.getText().toString(),
                         mTVreasons.getText().toString(),
-                        mTVtotal.getText().toString()
-
+                        mTVtotal.getText().toString(),
+                        FirebaseAuth.getInstance().getUid()
                 );
 
                 save(model, new DatabaseReference.CompletionListener() {
@@ -314,6 +315,7 @@ public class ApplyLeaves_Activity extends AppCompatActivity implements AdapterVi
             mId = mReference2.push().getKey();
         }
 
+        mReference3.child(mId).setValue(model,listener);
         mReference2.child(mId).setValue(model, listener);
     }
 
