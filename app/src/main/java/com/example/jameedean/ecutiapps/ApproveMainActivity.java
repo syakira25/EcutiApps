@@ -2,14 +2,19 @@ package com.example.jameedean.ecutiapps;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.jameedean.ecutiapps.adapter.ApproveLeaves_Adapter;
@@ -17,6 +22,8 @@ import com.example.jameedean.ecutiapps.adapter.StatusLeaves_Adapter;
 import com.example.jameedean.ecutiapps.data.Reference;
 import com.example.jameedean.ecutiapps.model.ApplyLeaves_Model;
 import com.example.jameedean.ecutiapps.model.Approve;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -32,6 +39,7 @@ public class ApproveMainActivity extends AppCompatActivity {
     private ApproveLeaves_Adapter mAdapter;
 
     private ArrayList<String> mKeys;
+
     // Firebase Authentication
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mCurrentUser;
@@ -41,7 +49,10 @@ public class ApproveMainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //get firebase auth instance
         mFirebaseAuth = FirebaseAuth.getInstance();
+
+        //get current user
         mCurrentUser = mFirebaseAuth.getCurrentUser();
 
         setContentView(R.layout.activity_approvemain);
@@ -75,7 +86,7 @@ public class ApproveMainActivity extends AppCompatActivity {
         recyclerView.setAdapter(mAdapter);
 
         mReference = FirebaseDatabase.getInstance().getReference(Reference.USER_DB);
-        //mReference1 = mReference.child(mCurrentUser.getUid());
+        mReference1 = FirebaseDatabase.getInstance().getReference(Reference.USER_DB + "/" + Reference.USER_INFO);
         mReference2 = FirebaseDatabase.getInstance().getReference(Reference.LEAVES_RECORD);
 
     }
@@ -128,8 +139,62 @@ public class ApproveMainActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
                 break;
+            case R.id.action_changepass:
+                updatePassword();
+                break;
         }
 
         return true;
+    }
+
+    private void updatePassword() {
+
+        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.activity_changepass, null);
+        dialogBuilder.setView(dialogView);
+
+        final Button chgpassfr = (Button) dialogView.findViewById(R.id.chgbtn);
+        final Button cancel = (Button) dialogView.findViewById(R.id.cancelbtn);
+        final EditText newPass = (EditText) dialogView.findViewById(R.id.newpass);
+
+        final AlertDialog dlg = dialogBuilder.create();
+
+        chgpassfr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mCurrentUser != null && !newPass.getText().toString().trim().equals("")) {
+                    if (newPass.getText().toString().trim().length() < 6) {
+                        newPass.setError("Password too short, enter minimum 6 characters");
+                    } else {
+                        mCurrentUser.updatePassword(newPass.getText().toString().trim())
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            Toast.makeText(ApproveMainActivity.this, "Password is updated, sign in with new password!", Toast.LENGTH_SHORT).show();
+                                            startActivity(new Intent(ApproveMainActivity.this, MainActivity.class));
+                                            final FirebaseDatabase fireBaseUpdatePublicHoliday = FirebaseDatabase.getInstance();
+                                            DatabaseReference fireBasePublicHoliday = fireBaseUpdatePublicHoliday.getReference(Reference.USER_DB + "/" + Reference.USER_INFO + "/" + mCurrentUser.getUid() + "/password");
+                                            String newpass = newPass.getText().toString().trim();
+                                            fireBasePublicHoliday.setValue(newpass);
+                                        } else {
+                                            Toast.makeText(ApproveMainActivity.this, "Failed to update password!", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+                    }
+                } else if (newPass.getText().toString().trim().equals("")) {
+                    newPass.setError("Enter password");
+                }
+            }
+        });
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dlg.dismiss();
+            }
+        });
+        dlg.show();
     }
 }

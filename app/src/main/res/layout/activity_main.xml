@@ -151,10 +151,10 @@
                 android:layout_marginRight="30dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="15dp"
-                android:background="@color/colorPrimary"
+                android:background="@drawable/roundcorner"
                 android:fontFamily="@font/ftv_font"
                 android:text="SIGN IN"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"/>
 
             <Button
                 android:id="@+id/btn_reset_password"

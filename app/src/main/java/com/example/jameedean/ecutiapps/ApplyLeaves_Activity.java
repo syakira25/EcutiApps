@@ -105,7 +105,7 @@ public class ApplyLeaves_Activity extends AppCompatActivity implements AdapterVi
         categories.add("Annual Leaves");
         categories.add("Medical Leaves");
         categories.add("Emergency Leaves");
-        categories.add("Public Holiday");
+        categories.add("Unpaod");
 
         // Creating adapter for spinner
         mTypeButton.setPrompt("Select one leaves");
@@ -163,7 +163,7 @@ public class ApplyLeaves_Activity extends AppCompatActivity implements AdapterVi
             public void onDataChange(DataSnapshot dataSnapshot) {
                mTVname.setText(dataSnapshot.child("name").getValue().toString());
                mTVemail.setText(dataSnapshot.child("email").getValue().toString());
-               mTVAL.setText("\n"+"ANNUAL LEAVES : "+dataSnapshot.child("annual").getValue().toString()+"\n\n"+ "MEDICAL LEAVE : "+dataSnapshot.child("mc").getValue().toString()+"\n\n"+"EMERGENCY LEAVE : "+dataSnapshot.child("el").getValue().toString()+"\n\n"+"PUBLIC HOLIDAY : "+dataSnapshot.child("public_leave").getValue().toString());
+               mTVAL.setText("\n"+"ANNUAL LEAVES : "+dataSnapshot.child("annual").getValue().toString()+"\n\n"+ "MEDICAL LEAVE : "+dataSnapshot.child("mc").getValue().toString()+"\n\n"+"EMERGENCY LEAVE : "+dataSnapshot.child("el").getValue().toString()+"\n\n"+"UNPAID LEAVES : "+dataSnapshot.child("public_leave").getValue().toString());
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -270,6 +270,8 @@ public class ApplyLeaves_Activity extends AppCompatActivity implements AdapterVi
         switch (item.getItemId()) {
             case R.id.menu_staff_action_save:
                 // What to do when save
+
+                int  x= getDays(startDate,endDate);
                 ApplyLeaves_Model model = new ApplyLeaves_Model(
                         mTVname.getText().toString(),
                         mTVemail.getText().toString(),
@@ -277,7 +279,7 @@ public class ApplyLeaves_Activity extends AppCompatActivity implements AdapterVi
                         displayCurrentTime.getText().toString(),
                         displayCurrentTime2.getText().toString(),
                         mTVreasons.getText().toString(),
-                        mTVtotal.getText().toString(),
+                        String.valueOf(x),
                         FirebaseAuth.getInstance().getUid()
                 );
 
@@ -302,7 +304,50 @@ public class ApplyLeaves_Activity extends AppCompatActivity implements AdapterVi
 
         return super.onOptionsItemSelected(item);
     }
+    private static int getDays(Date startDate, Date endDate) {
+        Calendar startCal;
+        Calendar endCal;
+        startCal = Calendar.getInstance();
+        startCal.setTime(startDate);
+        endCal = Calendar.getInstance();
+        endCal.setTime(endDate);
 
+        ArrayList<String> holidays = new ArrayList<>();
+        // contoh hari sultan kedah.. 22/10/2018 .. jangan gatal kerja
+
+        holidays.add("2018-10-22");
+
+
+        int workDays = 0;
+
+    /*If start date is coming after end date, Then shuffling Dates and storing dates
+by incrementing upto end date in do-while part.*/
+        if (startCal.getTimeInMillis() > endCal.getTimeInMillis()) {
+            startCal.setTime(endDate);
+            endCal.setTime(startDate);
+        }
+
+        do {
+            String dateYmd = (startCal.get(Calendar.YEAR)+"-"+AppendZero(String.valueOf(startCal.get(Calendar.MONTH)+1))+"-"+AppendZero(String.valueOf(startCal.get(Calendar.DATE))));
+
+            if (startCal.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY &&
+                    startCal.get(Calendar.DAY_OF_WEEK) != Calendar.FRIDAY &&
+                    !holidays.contains(dateYmd)
+                    ) {
+                ++workDays;
+                System.out.println("date "+dateYmd);
+            }
+            startCal.add(Calendar.DAY_OF_MONTH, 1);
+        } while (startCal.getTimeInMillis() <= endCal.getTimeInMillis());
+
+        return workDays;
+    }
+    private  static String AppendZero(String  string ){
+        if(string.length()==1){
+            string  = "0"+string;
+        }
+        return string;
+    }
     /***
      * Save record to firebase
      * @param model

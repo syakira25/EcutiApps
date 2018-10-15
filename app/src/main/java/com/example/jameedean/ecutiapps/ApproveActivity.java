@@ -134,6 +134,7 @@ public class ApproveActivity extends AppCompatActivity implements AdapterView.On
                             displayCurrentTime.setText(model.getDate_start());
                             displayCurrentTime2.setText(model.getDate_end());
                             mTVtotal.setText(model.getTotal_leave());
+//                            mTVtotal.setText(dataSnapshot.child("total").getValue().toString());
                             mTVreasons.setText(model.getMessage());
                             UID = model.getUid();
                         }
@@ -416,7 +417,7 @@ public class ApproveActivity extends AppCompatActivity implements AdapterView.On
                             }
                             //fireBaseUpdateMedicalLeave.goOffline();
                             break;
-                        case "Public Holiday":
+                        case "Unpaid Leaves":
                             Log.e("bal", String.valueOf(pb));
                             String pbx = (String.valueOf(pb - Integer.valueOf(fn.getTotal())));
                             Log.e("bfw", String.valueOf(pbx));
@@ -467,6 +468,7 @@ public class ApproveActivity extends AppCompatActivity implements AdapterView.On
 
            // mReference1.child(UID).addValueEventListener(valueEventListener);
             mReference1.child(UID).addListenerForSingleValueEvent(valueEventListener);
+            mReference2.addListenerForSingleValueEvent(valueEventListener);
           //  mReference1.removeEventListener(valueEventListener);
         }
 

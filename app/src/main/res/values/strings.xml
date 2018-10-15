@@ -44,7 +44,7 @@
         <item>Annual Leaves</item>
         <item>Medical Leaves (MC)</item>
         <item>Emergency Leaves (EL)</item>
-        <item>Public Holiday</item>
+        <item>Unpaid Leaves</item>
     </string-array>
 
     <string name="btn_forgot_password">Forgot your password?</string>

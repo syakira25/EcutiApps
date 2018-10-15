@@ -2,6 +2,7 @@ package com.example.jameedean.ecutiapps;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -90,7 +91,8 @@ public class RegisterStaff_Activity extends AppCompatActivity implements Adapter
         categories.add("Others");
 
         // Creating adapter for spinner
-        roleuser.setPrompt("Status Leaves Staff");
+        roleuser.setPrompt("Users Roles");
+
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,categories);
 
         // Drop down layout style - list view with radio button
@@ -173,7 +175,7 @@ public class RegisterStaff_Activity extends AppCompatActivity implements Adapter
         switch (item.getItemId()) {
             case R.id.action_save:
                 registerUser();
-                sendEmailVerification();
+                //sendEmailVerification();
                 break;
             case R.id.action_delete:
                 if(!mId.isEmpty()) {
@@ -326,8 +328,7 @@ public class RegisterStaff_Activity extends AppCompatActivity implements Adapter
     }
 
     private void showProcessDialog() {
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("Register");
+        progressDialog = new ProgressDialog(this, R.style.AppTheme_Dark_Dialog);
         progressDialog.setMessage("Register a new account...");
         progressDialog.show();
     }
@@ -343,7 +344,6 @@ public class RegisterStaff_Activity extends AppCompatActivity implements Adapter
     }
     public void onNothingSelected(AdapterView<?> arg0) {
         // TODO Auto-generated method stub
-
     }
 
     private void sendEmailVerification(){

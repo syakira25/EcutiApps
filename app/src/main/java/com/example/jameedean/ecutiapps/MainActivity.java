@@ -4,7 +4,9 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -83,6 +85,9 @@ public class MainActivity extends AppCompatActivity implements TextWatcher, Comp
 
         firebaseAuth = FirebaseAuth.getInstance();
 
+        Typeface typeface = ResourcesCompat.getFont(this, R.font.ftv_font);
+        rem_userpass.setTypeface(typeface);
+
         btnReset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -107,7 +112,14 @@ public class MainActivity extends AppCompatActivity implements TextWatcher, Comp
                     Toast.makeText(getApplicationContext(), "Enter password!", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                final ProgressDialog progressDialog = ProgressDialog.show(MainActivity.this, "Please wait...", "Proccessing...", true);
+               // final ProgressDialog progressDialog = ProgressDialog.show(MainActivity.this, " ", "Proccessing...", true);
+
+                final ProgressDialog progressDialog = new ProgressDialog(MainActivity.this,
+                        R.style.AppTheme_Dark_Dialog);
+                progressDialog.setIndeterminate(true);
+                progressDialog.setMessage("Authenticating...");
+                progressDialog.show();
+
                 //authenticate user
                 firebaseAuth.signInWithEmailAndPassword(email, password)
                         .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
@@ -163,6 +175,9 @@ public class MainActivity extends AppCompatActivity implements TextWatcher, Comp
                             case "Staff":
                                 cls = DashboardStaffActivity.class;
                             break;
+                            case "Others":
+                                cls = DashboardStaffActivity.class;
+                                break;
                         }
                         Intent intent = new Intent(MainActivity.this, cls);
 
