@@ -105,7 +105,7 @@ public class ApplyLeaves_Activity extends AppCompatActivity implements AdapterVi
         categories.add("Annual Leaves");
         categories.add("Medical Leaves");
         categories.add("Emergency Leaves");
-        categories.add("Unpaod");
+        categories.add("Unpaid Leaves");
 
         // Creating adapter for spinner
         mTypeButton.setPrompt("Select one leaves");
