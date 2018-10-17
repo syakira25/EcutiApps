@@ -1,4 +1,4 @@
-package ;
+package com.kyra.jameedean.ecutiapps.ecutiapps;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
