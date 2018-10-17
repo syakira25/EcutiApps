@@ -11,21 +11,22 @@ public class ApplyLeaves_Model{
     private String date_start;
     private String date_end;
     private String message;
-    private String total_leave;
+    private String total;
     private String uid;
+    private String status;
 
     public ApplyLeaves_Model() {
         // This is default constructor.
     }
 
-    public ApplyLeaves_Model(String name, String email, String types_leave, String date_start,String date_end, String message, String total_leave, String uid){
+    public ApplyLeaves_Model(String name, String email, String types_leave, String date_start,String date_end, String message, String total, String uid){
         this.name = name;
         this.email = email;
         this.types_leave = types_leave;
         this.date_start = date_start;
         this.date_end = date_end;
         this.message = message;
-        this.total_leave = total_leave;
+        this.total = total;
         this.uid = uid;
     }
 
@@ -65,9 +66,13 @@ public class ApplyLeaves_Model{
         this.message = message;
     }
 
-    public String getTotal_leave(){return total_leave;}
+    public String getTotal(){return total;}
 
-    public void setTotal_leave(String total_leave){this.total_leave=total_leave;}
+    public void setTotal(String total_leave){this.total=total;}
+
+    public  String getStatus(){return status;}
+
+    public void setStatus(String status){this.status=status;}
 
     public String getUid(){return uid;}
 

@@ -13,7 +13,7 @@ public class Approve {
     private String message;
     private String total;
     private String status;
-    private String annual, mc, el, public_leave;
+    //private String annual, mc, el, public_leave;
     private String uid;
 
     public Approve() {
@@ -44,21 +44,21 @@ public class Approve {
 
     public void setEmail(String email){this.email = email;}
 
-    public  String getAnnual(){return annual;}
-
-    public  void setAnnual(String annual){this.annual=annual;}
-
-    public String getMc(){return mc;}
-
-    public void setMc(String mc){this.mc=mc;}
-
-    public String getEl(){return el;}
-
-    public void setEl(String el){this.el=el;}
-
-    public String getPublic_leave(){return public_leave;}
-
-    public void setPublic_leave(String public_leave){this.public_leave=public_leave;}
+//    public  String getAnnual(){return annual;}
+//
+//    public  void setAnnual(String annual){this.annual=annual;}
+//
+//    public String getMc(){return mc;}
+//
+//    public void setMc(String mc){this.mc=mc;}
+//
+//    public String getEl(){return el;}
+//
+//    public void setEl(String el){this.el=el;}
+//
+//    public String getPublic_leave(){return public_leave;}
+//
+//    public void setPublic_leave(String public_leave){this.public_leave=public_leave;}
 
     public String getTypes_leave(){return types_leave;}
 

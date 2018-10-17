@@ -65,7 +65,7 @@ public class ViewStatus_Staff extends AppCompatActivity {
 
         mReference = FirebaseDatabase.getInstance().getReference(Reference.USER_DB);
         mReference1 = mReference.child(Reference.USER_INFO);
-        mReference2 = FirebaseDatabase.getInstance().getReference(mCurrentUser.getUid()).child(Reference.LEAVES_RECORD);
+        mReference2 = FirebaseDatabase.getInstance().getReference(Reference.LEAVES_RECORD);
 
         Intent intent = getIntent();
         // Load record
@@ -84,7 +84,7 @@ public class ViewStatus_Staff extends AppCompatActivity {
                             displayCurrentTime2.setText(model.getDate_end());
                             mTVtotal.setText(model.getTotal());
                             mTVreasons.setText(model.getMessage());
-                            //mTVstatus.setText(model.getStatus());
+                            mTVstatus.setText(model.getStatus());
                         }
                     }
 

@@ -127,14 +127,15 @@ public class ApproveActivity extends AppCompatActivity implements AdapterView.On
                 mReference2.child(mId).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        ApplyLeaves_Model model = dataSnapshot.getValue(ApplyLeaves_Model.class);
+                        Approve model = dataSnapshot.getValue(Approve.class);
                         if (model != null) {
                             mTVname.setText(model.getName());
                             mTVemail.setText(model.getEmail());
                             mItemSelected.setText(model.getTypes_leave());
                             displayCurrentTime.setText(model.getDate_start());
                             displayCurrentTime2.setText(model.getDate_end());
-                            mTVtotal.setText(model.getTotal_leave());
+                            mTVtotal.setText(model.getTotal());
+                            mTVstatus.setText(model.getStatus());
 //                            mTVtotal.setText(dataSnapshot.child("total").getValue().toString());
                             mTVreasons.setText(model.getMessage());
                             UID = model.getUid();
@@ -245,7 +246,7 @@ public class ApproveActivity extends AppCompatActivity implements AdapterView.On
                 save(model, new DatabaseReference.CompletionListener() {
                     @Override
                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                        actionNotification(databaseError, R.string.done_saved);
+                        actionNotification(databaseError, R.string.done_saved2);
                     }
                 });
                 break;
@@ -278,6 +279,7 @@ public class ApproveActivity extends AppCompatActivity implements AdapterView.On
         if (mId == null) {
             // generate id
             mId = mReference2.push().getKey();
+            mId = mReference3.push().getKey();
             //   Intent intent = new Intent();
             //mId = intent.getStringExtra(Reference.LEAVES_ID);
 
@@ -312,7 +314,7 @@ public class ApproveActivity extends AppCompatActivity implements AdapterView.On
                             try {
                                 FirebaseDatabase fireBaseUpdateYear = FirebaseDatabase.getInstance();
                                 DatabaseReference fireBaseYear = fireBaseUpdateYear.getReference(Reference.USER_DB + "/" + Reference.USER_INFO + "/" + UID + "/annual");
-                                DatabaseReference fireBaseYear2 = fireBaseUpdateYear.getReference(mCurrentUser.getUid() + "/" + Reference.LEAVES_RECORD + "/" + "/annual");
+                                //DatabaseReference fireBaseYear2 = fireBaseUpdateYear.getReference(mCurrentUser.getUid() + "/" + Reference.LEAVES_RECORD + "/" + "/annual");
                                 Log.e("al", (Reference.USER_DB + "/" + Reference.USER_INFO + "/" + UID + "/annual"));
                                 fireBaseYear.setValue(alx,new DatabaseReference.CompletionListener(){
                                     @Override
@@ -325,7 +327,7 @@ public class ApproveActivity extends AppCompatActivity implements AdapterView.On
                                     }
 
                                 });
-                                fireBaseYear2.setValue(alx,new DatabaseReference.CompletionListener(){
+                                /*fireBaseYear2.setValue(alx,new DatabaseReference.CompletionListener(){
                                     @Override
                                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference){
                                         if(databaseError != null){
@@ -335,7 +337,7 @@ public class ApproveActivity extends AppCompatActivity implements AdapterView.On
                                         }
                                     }
 
-                                });
+                                });*/
                             } catch (Exception exception) {
                                 Log.e("al", exception.getMessage());
                                 Log.e("al", (Reference.USER_DB + "/" + Reference.USER_INFO + "/" + UID + "/annual"));
@@ -349,7 +351,7 @@ public class ApproveActivity extends AppCompatActivity implements AdapterView.On
                             Log.e("bfw", String.valueOf(elx));
                             final FirebaseDatabase fireBaseUpdateLeave = FirebaseDatabase.getInstance();
                             DatabaseReference fireBaseLeave = fireBaseUpdateLeave.getReference(Reference.USER_DB + "/" + Reference.USER_INFO + "/" + UID + "/el");
-                            DatabaseReference fireBaseLeave2 = fireBaseUpdateLeave.getReference(mCurrentUser.getUid() + "/" + Reference.LEAVES_RECORD + "/" + "/el");
+                            //DatabaseReference fireBaseLeave2 = fireBaseUpdateLeave.getReference(mCurrentUser.getUid() + "/" + Reference.LEAVES_RECORD + "/" + "/el");
                             try {
                                 fireBaseLeave.setValue(elx,new DatabaseReference.CompletionListener(){
                                     @Override
@@ -361,7 +363,7 @@ public class ApproveActivity extends AppCompatActivity implements AdapterView.On
                                         }
                                     }
                                 });
-                                fireBaseLeave2.setValue(elx,new DatabaseReference.CompletionListener(){
+                                /*fireBaseLeave2.setValue(elx,new DatabaseReference.CompletionListener(){
                                     @Override
                                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference){
                                         if(databaseError != null){
@@ -370,7 +372,7 @@ public class ApproveActivity extends AppCompatActivity implements AdapterView.On
                                             Log.e("db","boleh save");
                                         }
                                     }
-                                });
+                                });*/
                             } catch (Exception exception) {
                                 Log.e("al", exception.getMessage());
                                 Log.e("al", (Reference.USER_DB + "/" + Reference.USER_INFO + "/" + UID + "/el"));
@@ -386,7 +388,7 @@ public class ApproveActivity extends AppCompatActivity implements AdapterView.On
                             final FirebaseDatabase fireBaseUpdateMedicalLeave = FirebaseDatabase.getInstance();
 
                             DatabaseReference fireBaseMedicalLeave = fireBaseUpdateMedicalLeave.getReference(Reference.USER_DB + "/" + Reference.USER_INFO + "/" + UID + "/mc");
-                            DatabaseReference fireBaseMedicalLeave2 = fireBaseUpdateMedicalLeave.getReference(mCurrentUser.getUid() + "/" + Reference.LEAVES_RECORD + "/"  + "/mc");
+                            //DatabaseReference fireBaseMedicalLeave2 = fireBaseUpdateMedicalLeave.getReference(mCurrentUser.getUid() + "/" + Reference.LEAVES_RECORD + "/"  + "/mc");
 
                             try {
                                 fireBaseMedicalLeave.setValue(mcx,new DatabaseReference.CompletionListener(){
@@ -400,7 +402,7 @@ public class ApproveActivity extends AppCompatActivity implements AdapterView.On
                                     }
 
                                 });
-                                fireBaseMedicalLeave2.setValue(mcx,new DatabaseReference.CompletionListener(){
+                                /*fireBaseMedicalLeave2.setValue(mcx,new DatabaseReference.CompletionListener(){
                                     @Override
                                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference){
                                         if(databaseError != null){
@@ -410,7 +412,7 @@ public class ApproveActivity extends AppCompatActivity implements AdapterView.On
                                         }
                                     }
 
-                                });
+                                });*/
                             } catch (Exception exception) {
                                 Log.e("al", exception.getMessage());
                                 Log.e("al", (Reference.USER_DB + "/" + Reference.USER_INFO + "/" + UID + "/mc"));
@@ -425,7 +427,7 @@ public class ApproveActivity extends AppCompatActivity implements AdapterView.On
                             final FirebaseDatabase fireBaseUpdatePublicHoliday = FirebaseDatabase.getInstance();
 
                             DatabaseReference fireBasePublicHoliday = fireBaseUpdatePublicHoliday.getReference(Reference.USER_DB + "/" + Reference.USER_INFO + "/" + UID + "/public_leave");
-                            DatabaseReference fireBasePublicHoliday2 = fireBaseUpdatePublicHoliday.getReference(mCurrentUser.getUid() + "/" + Reference.LEAVES_RECORD + "/"  + "/public_leave");
+                            //DatabaseReference fireBasePublicHoliday2 = fireBaseUpdatePublicHoliday.getReference(mCurrentUser.getUid() + "/" + Reference.LEAVES_RECORD + "/"  + "/public_leave");
                             try {
                                 fireBasePublicHoliday.setValue(pbx,new DatabaseReference.CompletionListener(){
                                     @Override
@@ -438,7 +440,7 @@ public class ApproveActivity extends AppCompatActivity implements AdapterView.On
                                     }
 
                                 });
-                                fireBasePublicHoliday2.setValue(pbx,new DatabaseReference.CompletionListener(){
+                                /*fireBasePublicHoliday2.setValue(pbx,new DatabaseReference.CompletionListener(){
                                     @Override
                                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference){
                                         if(databaseError != null){
@@ -448,7 +450,7 @@ public class ApproveActivity extends AppCompatActivity implements AdapterView.On
                                         }
                                     }
 
-                                });
+                                });*/
 
                             } catch (Exception exception) {
                                 Log.e("al", exception.getMessage());
@@ -485,6 +487,9 @@ public class ApproveActivity extends AppCompatActivity implements AdapterView.On
 
         });
 
+        FirebaseDatabase mFirebase = FirebaseDatabase.getInstance();
+        DatabaseReference mRefer = mFirebase.getReference(UID + "/" + Reference.LEAVES_RECORD );
+        mRefer.child(mId).setValue(model,listener);
         /*mReference3.setValue(fn,new DatabaseReference.CompletionListener(){
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference){
