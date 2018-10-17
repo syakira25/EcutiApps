@@ -1,4 +1,4 @@
-package com.example.jameedean.ecutiapps;
+package com.kyra.jameedean.ecutiapps.ecutiapps;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,10 +14,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.jameedean.ecutiapps.data.Reference;
-import com.example.jameedean.ecutiapps.model.ApplyLeaves_Model;
-import com.example.jameedean.ecutiapps.model.Approve;
-import com.example.jameedean.ecutiapps.model.Staff;
+import com.kyra.jameedean.ecutiapps.ecutiapps.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -25,6 +22,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.kyra.jameedean.ecutiapps.ecutiapps.data.Reference;
+import com.kyra.jameedean.ecutiapps.ecutiapps.model.ApplyLeaves_Model;
+import com.kyra.jameedean.ecutiapps.ecutiapps.model.Approve;
+import com.kyra.jameedean.ecutiapps.ecutiapps.model.Staff;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -468,7 +469,7 @@ public class ApproveActivity extends AppCompatActivity implements AdapterView.On
 
            // mReference1.child(UID).addValueEventListener(valueEventListener);
             mReference1.child(UID).addListenerForSingleValueEvent(valueEventListener);
-            mReference2.addListenerForSingleValueEvent(valueEventListener);
+            mReference2.child(UID).addListenerForSingleValueEvent(valueEventListener);
           //  mReference1.removeEventListener(valueEventListener);
         }
 
@@ -484,7 +485,7 @@ public class ApproveActivity extends AppCompatActivity implements AdapterView.On
 
         });
 
-        mReference3.child(mId).setValue(fn,new DatabaseReference.CompletionListener(){
+        /*mReference3.setValue(fn,new DatabaseReference.CompletionListener(){
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference){
                 if(databaseError != null){
@@ -494,7 +495,7 @@ public class ApproveActivity extends AppCompatActivity implements AdapterView.On
                 }
             }
 
-        });
+        });*/
     }
 
     private void actionNotification(DatabaseError error, int successResourceId) {

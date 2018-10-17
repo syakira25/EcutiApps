@@ -1,13 +1,13 @@
-package com.example.jameedean.ecutiapps;
+package com.kyra.jameedean.ecutiapps.ecutiapps;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.content.res.ResourcesCompat;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,28 +15,39 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.jameedean.ecutiapps.data.Reference;
+import com.kyra.jameedean.ecutiapps.ecutiapps.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.kyra.jameedean.ecutiapps.ecutiapps.adapter.StaffAdapter;
+import com.kyra.jameedean.ecutiapps.ecutiapps.data.Reference;
+import com.kyra.jameedean.ecutiapps.ecutiapps.model.Staff;
 
-public class DashboardActivity extends AppCompatActivity {
+import java.util.ArrayList;
 
-    private CardView btn_adduser;
-    private CardView btn_apply;
-    private CardView btn_approve;
-    private CardView btn_viewstatus;
+public class StaffMain_Activity extends AppCompatActivity {
+
+    private StaffAdapter mAdapter;
+
+    private final static int STAFF_ADD = 1000;
+
+    private ArrayList<String> mKeys;
 
     // Firebase Authentication
+    private DatabaseReference mReference;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mCurrentUser;
+    private FirebaseAuth.AuthStateListener authListener;
 
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -46,48 +57,71 @@ public class DashboardActivity extends AppCompatActivity {
         //get current user
         mCurrentUser = mFirebaseAuth.getCurrentUser();
 
-        setContentView(R.layout.activity_dash);
+        setContentView(R.layout.activity_staff);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        btn_adduser = (CardView) findViewById(R.id.adduserId);
-        btn_apply = (CardView) findViewById(R.id.applyId);
-        btn_approve = (CardView) findViewById(R.id.approveId);
-        btn_viewstatus = (CardView) findViewById(R.id.viewId);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onBackPressed();
+                }
+            });
+        }
 
+        mKeys = new ArrayList<>();
 
-        btn_adduser.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                startActivity(new Intent(DashboardActivity.this, StaffMain_Activity.class));
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), RegisterStaff_Activity.class);
+                startActivityForResult(intent, STAFF_ADD);
             }
         });
 
-        btn_apply.setOnClickListener(new View.OnClickListener() {
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv_staff);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mAdapter = new StaffAdapter(this, new StaffAdapter.OnItemClick() {
             @Override
-            public void onClick(View v) {
-                startActivity(new Intent(DashboardActivity.this, ApplyLeaves_Activity.class));
+            public void onClick(int pos) {
+                // Open back note activity with data
+                Intent intent = new Intent(getApplicationContext(), RegisterStaff_Activity.class);
+                intent.putExtra(Reference.STAFF_ID, mKeys.get(pos));
+                startActivity(intent);
             }
         });
+        recyclerView.setAdapter(mAdapter);
 
-        btn_approve.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(DashboardActivity.this, ApproveMainActivity.class));
-            }
-        });
-
-        btn_viewstatus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(DashboardActivity.this, ViewStatusMainActivity.class));
-            }
-        });
+        mReference = FirebaseDatabase.getInstance().getReference(mCurrentUser.getUid()).child(Reference.USER_DB);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+
+        // listening for changes
+        mReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // clear table
+                mKeys.clear();
+                mAdapter.clear();
+                // load data
+                for (DataSnapshot noteSnapshot : dataSnapshot.getChildren()) {
+                    Staff model = noteSnapshot.getValue(Staff.class);
+                    mAdapter.addData(model);
+                    mKeys.add(noteSnapshot.getKey());
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // stop listening
+            }
+        });
     }
 
     @Override
@@ -103,9 +137,7 @@ public class DashboardActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         switch (item.getItemId()) {
             case R.id.action_logout:
                 mFirebaseAuth.signOut();
@@ -145,14 +177,14 @@ public class DashboardActivity extends AppCompatActivity {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
-                                            Toast.makeText(DashboardActivity.this, "Password is updated, sign in with new password!", Toast.LENGTH_SHORT).show();
-                                            startActivity(new Intent(DashboardActivity.this, MainActivity.class));
+                                            Toast.makeText(StaffMain_Activity.this, "Password is updated, sign in with new password!", Toast.LENGTH_SHORT).show();
+                                            startActivity(new Intent(StaffMain_Activity.this, MainActivity.class));
                                             final FirebaseDatabase fireBaseUpdatePublicHoliday = FirebaseDatabase.getInstance();
                                             DatabaseReference fireBasePublicHoliday = fireBaseUpdatePublicHoliday.getReference(Reference.USER_DB + "/" + Reference.USER_INFO + "/" + mCurrentUser.getUid() + "/password");
                                             String newpass = newPass.getText().toString().trim();
                                             fireBasePublicHoliday.setValue(newpass);
                                         } else {
-                                            Toast.makeText(DashboardActivity.this, "Failed to update password!", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(StaffMain_Activity.this, "Failed to update password!", Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 });
@@ -170,4 +202,21 @@ public class DashboardActivity extends AppCompatActivity {
         });
         dlg.show();
     }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

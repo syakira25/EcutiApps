@@ -1,4 +1,4 @@
-package com.example.jameedean.ecutiapps;
+package com.kyra.jameedean.ecutiapps.ecutiapps;
 
 import org.junit.Test;
 

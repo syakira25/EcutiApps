@@ -1,30 +1,22 @@
-package com.example.jameedean.ecutiapps;
+package com.kyra.jameedean.ecutiapps.ecutiapps;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.jameedean.ecutiapps.adapter.StaffAdapter;
-import com.example.jameedean.ecutiapps.data.Reference;
-import com.example.jameedean.ecutiapps.model.Staff;
+import com.kyra.jameedean.ecutiapps.ecutiapps.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,21 +26,22 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.kyra.jameedean.ecutiapps.ecutiapps.adapter.ApproveLeaves_Adapter;
+import com.kyra.jameedean.ecutiapps.ecutiapps.data.Reference;
+import com.kyra.jameedean.ecutiapps.ecutiapps.model.Approve;
 
 import java.util.ArrayList;
 
-public class StaffMain_Activity extends AppCompatActivity {
+public class ApproveMainActivity extends AppCompatActivity {
 
-    private StaffAdapter mAdapter;
-
-    private final static int STAFF_ADD = 1000;
+    private ApproveLeaves_Adapter mAdapter;
 
     private ArrayList<String> mKeys;
 
     // Firebase Authentication
-    private DatabaseReference mReference;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mCurrentUser;
+    private DatabaseReference mReference, mReference1, mReference2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +53,7 @@ public class StaffMain_Activity extends AppCompatActivity {
         //get current user
         mCurrentUser = mFirebaseAuth.getCurrentUser();
 
-        setContentView(R.layout.activity_staff);
+        setContentView(R.layout.activity_approvemain);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -76,29 +69,24 @@ public class StaffMain_Activity extends AppCompatActivity {
 
         mKeys = new ArrayList<>();
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), RegisterStaff_Activity.class);
-                startActivityForResult(intent, STAFF_ADD);
-            }
-        });
-
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv_staff);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv_leaves);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mAdapter = new StaffAdapter(this, new StaffAdapter.OnItemClick() {
+
+        mAdapter = new ApproveLeaves_Adapter(this, new ApproveLeaves_Adapter.OnItemClick() {
             @Override
             public void onClick(int pos) {
                 // Open back note activity with data
-                Intent intent = new Intent(getApplicationContext(), RegisterStaff_Activity.class);
-                intent.putExtra(Reference.STAFF_ID, mKeys.get(pos));
+                Intent intent = new Intent(getApplicationContext(), ApproveActivity.class);
+                intent.putExtra(Reference.LEAVES_ID, mKeys.get(pos));
                 startActivity(intent);
             }
         });
         recyclerView.setAdapter(mAdapter);
 
-        mReference = FirebaseDatabase.getInstance().getReference(mCurrentUser.getUid()).child(Reference.USER_DB);
+        mReference = FirebaseDatabase.getInstance().getReference(Reference.USER_DB);
+        mReference1 = FirebaseDatabase.getInstance().getReference(Reference.USER_DB + "/" + Reference.USER_INFO);
+        mReference2 = FirebaseDatabase.getInstance().getReference(Reference.LEAVES_RECORD);
+
     }
 
     @Override
@@ -106,7 +94,7 @@ public class StaffMain_Activity extends AppCompatActivity {
         super.onStart();
 
         // listening for changes
-        mReference.addValueEventListener(new ValueEventListener() {
+        mReference2.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // clear table
@@ -114,7 +102,7 @@ public class StaffMain_Activity extends AppCompatActivity {
                 mAdapter.clear();
                 // load data
                 for (DataSnapshot noteSnapshot : dataSnapshot.getChildren()) {
-                    Staff model = noteSnapshot.getValue(Staff.class);
+                    Approve model = noteSnapshot.getValue(Approve.class);
                     mAdapter.addData(model);
                     mKeys.add(noteSnapshot.getKey());
                 }
@@ -139,6 +127,7 @@ public class StaffMain_Activity extends AppCompatActivity {
     }
 
     @Override
+
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
@@ -152,6 +141,7 @@ public class StaffMain_Activity extends AppCompatActivity {
                 updatePassword();
                 break;
         }
+
         return true;
     }
 
@@ -180,14 +170,14 @@ public class StaffMain_Activity extends AppCompatActivity {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
-                                            Toast.makeText(StaffMain_Activity.this, "Password is updated, sign in with new password!", Toast.LENGTH_SHORT).show();
-                                            startActivity(new Intent(StaffMain_Activity.this, MainActivity.class));
+                                            Toast.makeText(ApproveMainActivity.this, "Password is updated, sign in with new password!", Toast.LENGTH_SHORT).show();
+                                            startActivity(new Intent(ApproveMainActivity.this, MainActivity.class));
                                             final FirebaseDatabase fireBaseUpdatePublicHoliday = FirebaseDatabase.getInstance();
                                             DatabaseReference fireBasePublicHoliday = fireBaseUpdatePublicHoliday.getReference(Reference.USER_DB + "/" + Reference.USER_INFO + "/" + mCurrentUser.getUid() + "/password");
                                             String newpass = newPass.getText().toString().trim();
                                             fireBasePublicHoliday.setValue(newpass);
                                         } else {
-                                            Toast.makeText(StaffMain_Activity.this, "Failed to update password!", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(ApproveMainActivity.this, "Failed to update password!", Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 });
@@ -205,21 +195,4 @@ public class StaffMain_Activity extends AppCompatActivity {
         });
         dlg.show();
     }
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

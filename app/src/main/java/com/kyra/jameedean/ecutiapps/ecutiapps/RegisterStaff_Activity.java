@@ -1,29 +1,24 @@
-package com.example.jameedean.ecutiapps;
+package com.kyra.jameedean.ecutiapps.ecutiapps;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.jameedean.ecutiapps.data.Reference;
-import com.example.jameedean.ecutiapps.model.Staff;
+import com.kyra.jameedean.ecutiapps.ecutiapps.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -34,6 +29,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.kyra.jameedean.ecutiapps.ecutiapps.data.Reference;
+import com.kyra.jameedean.ecutiapps.ecutiapps.model.Staff;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -175,7 +172,7 @@ public class RegisterStaff_Activity extends AppCompatActivity implements Adapter
         switch (item.getItemId()) {
             case R.id.action_save:
                 registerUser();
-                //sendEmailVerification();
+                sendEmailVerification();
                 break;
             case R.id.action_delete:
                 if(!mId.isEmpty()) {
@@ -279,7 +276,8 @@ public class RegisterStaff_Activity extends AppCompatActivity implements Adapter
                     public void onComplete(@NonNull Task<AuthResult> task) {
 
                         if (task.isSuccessful()) {
-
+                            sendEmailVerification();
+                            Toast.makeText(RegisterStaff_Activity.this, "Registration successful. Verification Email Send.", Toast.LENGTH_LONG).show();
                             // What to do when save
                             Staff model = new Staff(
                                    name,
@@ -354,11 +352,11 @@ public class RegisterStaff_Activity extends AppCompatActivity implements Adapter
                 if (task.isSuccessful()) {
                     // email sent
 
-                    Toast.makeText(RegisterStaff_Activity.this,"Check your email to verify.",Toast.LENGTH_LONG).show();
+                    Toast.makeText(RegisterStaff_Activity.this,"Check email to verify.",Toast.LENGTH_LONG).show();
                     // after email is sent just logout the user and finish this activity
-                    FirebaseAuth.getInstance().signOut();
-                    startActivity(new Intent(RegisterStaff_Activity.this, MainActivity.class));
-                    finish();
+//                    FirebaseAuth.getInstance().signOut();
+//                    startActivity(new Intent(RegisterStaff_Activity.this, MainActivity.class));
+//                    finish();
                 }
                 else
                 {

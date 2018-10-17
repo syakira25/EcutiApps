@@ -1,15 +1,15 @@
-package com.example.jameedean.ecutiapps;
+package com.kyra.jameedean.ecutiapps.ecutiapps;
 
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -21,10 +21,9 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.jameedean.ecutiapps.data.Reference;
+import com.kyra.jameedean.ecutiapps.ecutiapps.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -35,9 +34,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import java.util.Objects;
-
 
 public class MainActivity extends AppCompatActivity implements TextWatcher, CompoundButton.OnCheckedChangeListener {
     private static final String TAG = MainActivity.class.getName();
@@ -134,18 +130,44 @@ public class MainActivity extends AppCompatActivity implements TextWatcher, Comp
                                     if (password.length() < 6) {
                                         inputPassword.setError("Minimum length password 6");
                                     } else {
+
                                         Log.e("ERROR", task.getException().toString());
 
                                         Toast.makeText(MainActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
                                     }
                                 } else {
-
-                                    successLog();
+                                    checkIfEmailVerified();
+                                   // successLog();
                                 }
                             }
                         });
             }
         });
+    }
+
+    private void checkIfEmailVerified()
+    {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (user.isEmailVerified())
+        {
+            // user is verified, so you can finish this activity or send user to activity which you want.
+//            finish();
+//            Toast.makeText(MainActivity.this, "Successfully logged in", Toast.LENGTH_SHORT).show();
+//            Intent intent = new Intent(MainActivity.this,NavDrawerActivity.class);
+//            startActivity(intent);
+            successLog();
+        }
+        else
+        {
+            // email is not verified, so just prompt the message to the user and restart this activity.
+            // NOTE: don't forget to log out the user.
+            Toast.makeText(MainActivity.this, "Please verify your email first.", Toast.LENGTH_SHORT).show();
+            FirebaseAuth.getInstance().signOut();
+
+            //restart this activity
+
+        }
     }
 
     private void successLog() {

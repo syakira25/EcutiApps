@@ -1,4 +1,4 @@
-package com.example.jameedean.ecutiapps.adapter;
+package com.kyra.jameedean.ecutiapps.ecutiapps.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -7,11 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.jameedean.ecutiapps.model.Staff;
+import com.kyra.jameedean.ecutiapps.ecutiapps.R;
+import com.kyra.jameedean.ecutiapps.ecutiapps.model.Staff;
 
 import java.util.ArrayList;
-
-import com.example.jameedean.ecutiapps.R;
 
 public class StaffAdapter extends RecyclerView.Adapter<StaffAdapter.StaffViewHolder> {
 

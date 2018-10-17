@@ -1,4 +1,4 @@
-package com.example.jameedean.ecutiapps;
+package com.kyra.jameedean.ecutiapps.ecutiapps;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,11 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.jameedean.ecutiapps.adapter.ApproveLeaves_Adapter;
-import com.example.jameedean.ecutiapps.adapter.StatusLeaves_Adapter;
-import com.example.jameedean.ecutiapps.data.Reference;
-import com.example.jameedean.ecutiapps.model.ApplyLeaves_Model;
-import com.example.jameedean.ecutiapps.model.Approve;
+import com.kyra.jameedean.ecutiapps.ecutiapps.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,10 +26,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.kyra.jameedean.ecutiapps.ecutiapps.adapter.ApproveLeaves_Adapter;
+import com.kyra.jameedean.ecutiapps.ecutiapps.data.Reference;
+import com.kyra.jameedean.ecutiapps.ecutiapps.model.Approve;
 
 import java.util.ArrayList;
 
-public class ApproveMainActivity extends AppCompatActivity {
+public class ViewStatusMainActivity extends AppCompatActivity{
 
     private ApproveLeaves_Adapter mAdapter;
 
@@ -43,7 +41,7 @@ public class ApproveMainActivity extends AppCompatActivity {
     // Firebase Authentication
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mCurrentUser;
-    private DatabaseReference mReference, mReference1, mReference2;
+    private DatabaseReference mReference, mReference1, mReference2,mReference3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,11 +53,11 @@ public class ApproveMainActivity extends AppCompatActivity {
         //get current user
         mCurrentUser = mFirebaseAuth.getCurrentUser();
 
-        setContentView(R.layout.activity_approvemain);
+        setContentView(R.layout.activity_viewmain);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        if (getSupportActionBar() != null) {
+        if(getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
@@ -71,24 +69,21 @@ public class ApproveMainActivity extends AppCompatActivity {
 
         mKeys = new ArrayList<>();
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv_leaves);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv_statusleaves);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         mAdapter = new ApproveLeaves_Adapter(this, new ApproveLeaves_Adapter.OnItemClick() {
             @Override
             public void onClick(int pos) {
                 // Open back note activity with data
-                Intent intent = new Intent(getApplicationContext(), ApproveActivity.class);
+                Intent intent = new Intent(getApplicationContext(), ViewStatus_Activity.class);
                 intent.putExtra(Reference.LEAVES_ID, mKeys.get(pos));
                 startActivity(intent);
             }
         });
         recyclerView.setAdapter(mAdapter);
 
-        mReference = FirebaseDatabase.getInstance().getReference(Reference.USER_DB);
-        mReference1 = FirebaseDatabase.getInstance().getReference(Reference.USER_DB + "/" + Reference.USER_INFO);
-        mReference2 = FirebaseDatabase.getInstance().getReference(Reference.LEAVES_RECORD);
-
+        mReference = FirebaseDatabase.getInstance().getReference(Reference.LEAVES_RECORD);
     }
 
     @Override
@@ -96,7 +91,7 @@ public class ApproveMainActivity extends AppCompatActivity {
         super.onStart();
 
         // listening for changes
-        mReference2.addValueEventListener(new ValueEventListener() {
+        mReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // clear table
@@ -172,14 +167,14 @@ public class ApproveMainActivity extends AppCompatActivity {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
-                                            Toast.makeText(ApproveMainActivity.this, "Password is updated, sign in with new password!", Toast.LENGTH_SHORT).show();
-                                            startActivity(new Intent(ApproveMainActivity.this, MainActivity.class));
+                                            Toast.makeText(ViewStatusMainActivity.this, "Password is updated, sign in with new password!", Toast.LENGTH_SHORT).show();
+                                            startActivity(new Intent(ViewStatusMainActivity.this, MainActivity.class));
                                             final FirebaseDatabase fireBaseUpdatePublicHoliday = FirebaseDatabase.getInstance();
                                             DatabaseReference fireBasePublicHoliday = fireBaseUpdatePublicHoliday.getReference(Reference.USER_DB + "/" + Reference.USER_INFO + "/" + mCurrentUser.getUid() + "/password");
                                             String newpass = newPass.getText().toString().trim();
                                             fireBasePublicHoliday.setValue(newpass);
                                         } else {
-                                            Toast.makeText(ApproveMainActivity.this, "Failed to update password!", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(ViewStatusMainActivity.this, "Failed to update password!", Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 });

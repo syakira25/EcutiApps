@@ -1,4 +1,4 @@
-package com.example.jameedean.ecutiapps.model;
+package com.kyra.jameedean.ecutiapps.ecutiapps.model;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 

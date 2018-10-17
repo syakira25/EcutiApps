@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:243852762786:android:b3c3b73e86ba8e34",
         "android_client_info": {
-          "package_name": "com.example.jameedean.ecutiapps"
+          "package_name": "com.kyra.jameedean.ecutiapps.ecutiapps"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "243852762786-daph2kmbdb6ci2hqqdbddhqp6ugukklt.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.jameedean.ecutiapps",
+            "package_name": "com.kyra.jameedean.ecutiapps.ecutiapps",
             "certificate_hash": "9f923c9852bbdc6a6ecbac68db89f79b0786980a"
           }
         },
