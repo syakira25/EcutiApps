@@ -1,0 +1,171 @@
+{
+  "TpoD0ly5SQYzieGzDWKfQAN2Cnj1" : {
+    "Users" : {
+      "-LM_q88d1smJ-NyRQKJh" : {
+        "annual" : "6",
+        "el" : "2",
+        "email" : "daniel@gmail.com",
+        "job_position" : "manager",
+        "mc" : "4",
+        "name" : "daniel ahmad",
+        "password" : "da1234",
+        "phone" : "0142587896",
+        "public_leave" : "4",
+        "role" : "Management",
+        "uid" : "Yv1COhLsSRXjnCtRnpcUDKJo3BS2"
+      }
+    }
+  },
+  "Users" : {
+    "Users_info" : {
+      "mF3habB6RicIqx4pbV3LGwzIUNq1" : {
+        "annual" : "2",
+        "el" : "2",
+        "email" : "try@yahoo.com",
+        "job_position" : "manager",
+        "mc" : "2",
+        "name" : "try",
+        "password" : "as1234",
+        "phone" : "0142581471",
+        "public_leave" : "2",
+        "role" : "Staff",
+        "uid" : "mF3habB6RicIqx4pbV3LGwzIUNq1"
+      },
+      "sK1ERwxry5YnOZlWnynfrYKU7mu1" : {
+        "annual" : "2",
+        "el" : "2",
+        "email" : "damn@yahoo.com",
+        "job_position" : "staff",
+        "mc" : "2",
+        "name" : "damn",
+        "password" : "dann123",
+        "phone" : "0124584581",
+        "public_leave" : "2",
+        "role" : "Management",
+        "uid" : "sK1ERwxry5YnOZlWnynfrYKU7mu1"
+      }
+    },
+    "Yv1COhLsSRXjnCtRnpcUDKJo3BS2" : {
+      "annual" : "6",
+      "el" : "2",
+      "email" : "daniel@gmail.com",
+      "job_position" : "manager",
+      "mc" : "4",
+      "name" : "daniel ahmad",
+      "password" : "da1234",
+      "phone" : "0142587896",
+      "public_leave" : "4",
+      "role" : "Management",
+      "uid" : "Yv1COhLsSRXjnCtRnpcUDKJo3BS2"
+    },
+    "qSlJepsACiYRzKIFMB3iznI9uOW2" : {
+      "-LNcRsT3O9gwJvRKMq4B" : {
+        "date_end" : "1-10-2018",
+        "date_start" : "30-9-2018",
+        "email" : "sham@yahoo.com",
+        "message" : "test",
+        "name" : "sham shah",
+        "total_leave" : "2 Days",
+        "types_leave" : "Emergency Leaves"
+      },
+      "annual" : "4",
+      "el" : "2",
+      "email" : "sham@yahoo.com",
+      "job_position" : "staff",
+      "leaves_record" : {
+        "-LMfLY9a0sdyVsC2rQAb" : {
+          "date_end" : "20-9-2018",
+          "date_start" : "19-9-2018",
+          "email" : "",
+          "message" : "",
+          "name" : "",
+          "total_leave" : "2 Days",
+          "types_leave" : "Emergency Leaves"
+        },
+        "-LMfSiI5drEvTyWlVlPi" : {
+          "date_end" : "20-9-2018",
+          "date_start" : "19-9-2018",
+          "email" : "sham@yahoo.com",
+          "message" : "",
+          "name" : "sham shah",
+          "total_leave" : "2 Days",
+          "types_leave" : "Annual Leaves"
+        }
+      },
+      "mc" : "2",
+      "name" : "sham shah",
+      "password" : "sham1234",
+      "phone" : "0142583697",
+      "public_leave" : "2",
+      "role" : "Staff",
+      "uid" : "qSlJepsACiYRzKIFMB3iznI9uOW2"
+    }
+  },
+  "Yv1COhLsSRXjnCtRnpcUDKJo3BS2" : {
+    "Users" : {
+      "-LM_t4jmi0XEQuuDL7pC" : {
+        "annual" : "4",
+        "el" : "2",
+        "email" : "sham@yahoo.com",
+        "job_position" : "staff",
+        "mc" : "2",
+        "name" : "sham shah",
+        "password" : "sham1234",
+        "phone" : "0142583697",
+        "public_leave" : "2",
+        "role" : "Staff",
+        "uid" : "qSlJepsACiYRzKIFMB3iznI9uOW2"
+      }
+    }
+  },
+  "qSlJepsACiYRzKIFMB3iznI9uOW2" : {
+    "Users" : {
+      "-LMfXmV-po0Zr0M17tW7" : {
+        "annual" : "2",
+        "el" : "2",
+        "email" : "damn@yahoo.com",
+        "job_position" : "staff",
+        "mc" : "2",
+        "name" : "damn",
+        "password" : "dann123",
+        "phone" : "0124584581",
+        "public_leave" : "2",
+        "role" : "Staff",
+        "uid" : "sK1ERwxry5YnOZlWnynfrYKU7mu1"
+      },
+      "-LMfaJLRGmzoBN5Lz2jU" : {
+        "annual" : "2",
+        "el" : "2",
+        "email" : "try@yahoo.com",
+        "job_position" : "manager",
+        "mc" : "2",
+        "name" : "try",
+        "password" : "as1234",
+        "phone" : "0142581471",
+        "public_leave" : "2",
+        "role" : "Staff",
+        "uid" : "mF3habB6RicIqx4pbV3LGwzIUNq1"
+      }
+    },
+    "leaves_record" : {
+      "-LMfLY9a0sdyVsC2rQAb" : {
+        "date_end" : "20-9-2018",
+        "date_start" : "19-9-2018",
+        "email" : "",
+        "message" : "",
+        "name" : "",
+        "total_leave" : "2 Days",
+        "types_leave" : "Emergency Leaves"
+      },
+      "-LMfSiI5drEvTyWlVlPi" : {
+        "date_end" : "20-9-2018",
+        "date_start" : "19-9-2018",
+        "email" : "sham@yahoo.com",
+        "message" : "",
+        "name" : "sham shah",
+        "total_leave" : "2 Days",
+        "types_leave" : "Annual Leaves"
+      }
+    }
+  }
+}

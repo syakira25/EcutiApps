@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context=".DetailsUser_Activity"
+    tools:showIn="@layout/activity_user">
+
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60dp"
+        android:src="@drawable/ic_users" />
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:fontFamily="@font/ftv_font"
+        android:textStyle="italic|bold"
+        android:layout_below="@+id/image"
+        android:text="Name :"
+        android:layout_margin="@dimen/standard_padding"/>
+
+    <TextView
+        android:id="@+id/name_tv"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignBaseline="@+id/name"
+        android:layout_alignBottom="@+id/name"
+        android:layout_toEndOf="@+id/name"
+        android:textStyle="bold|italic"/>
+
+    <TextView
+        android:id="@+id/email"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_alignStart="@+id/name"
+        android:layout_below="@+id/name_tv"
+        android:fontFamily="@font/ftv_font"
+        android:text="Email :"
+        android:textStyle="italic|bold" />
+
+    <TextView
+        android:id="@+id/email_tv"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/name_tv"
+        android:layout_toEndOf="@+id/name"
+        android:textStyle="bold|italic" />
+
+    <TextView
+        android:id="@+id/phone"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_alignStart="@+id/name"
+        android:layout_below="@+id/email"
+        android:fontFamily="@font/ftv_font"
+        android:text="Phone Number :"
+        android:textStyle="italic|bold" />
+
+    <TextView
+        android:id="@+id/phone_tv"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/email_tv"
+        android:layout_marginStart="12dp"
+        android:layout_toEndOf="@+id/phone"
+        android:textStyle="bold|italic" />
+
+    <TextView
+        android:id="@+id/job"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_alignStart="@+id/name"
+        android:layout_below="@+id/phone"
+        android:fontFamily="@font/ftv_font"
+        android:text="Job Position :"
+        android:textStyle="italic|bold" />
+
+    <TextView
+        android:id="@+id/job_tv"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignStart="@+id/phone_tv"
+        android:layout_below="@+id/phone_tv"
+        android:textStyle="bold|italic" />
+
+    <TextView
+        android:id="@+id/annualjob_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_alignStart="@+id/job"
+        android:layout_below="@+id/job"
+        android:fontFamily="@font/ftv_font"
+        android:textStyle="bold|italic"
+        android:text="ANNUAL LEAVES : " />
+
+    <TextView
+        android:id="@+id/leave_textView2"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignBaseline="@+id/annualjob_textView"
+        android:layout_alignBottom="@+id/annualjob_textView"
+        android:layout_alignStart="@+id/job_tv"
+        android:fontFamily="@font/ftv_font"
+        android:padding="5dp"
+        android:textStyle="bold|italic" />
+
+    <TextView
+        android:id="@+id/mc_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_alignStart="@+id/annualjob_textView"
+        android:layout_below="@+id/annualjob_textView"
+        android:fontFamily="@font/ftv_font"
+        android:text="MEDICAL LEAVES : "
+        android:textStyle="bold|italic" />
+
+    <TextView
+        android:id="@+id/mc_leave_textView"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignStart="@+id/job_tv"
+        android:layout_below="@+id/leave_textView2"
+        android:fontFamily="@font/ftv_font"
+        android:padding="5dp"
+        android:textStyle="bold|italic" />
+
+    <TextView
+        android:id="@+id/el_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_alignStart="@+id/mc_textView"
+        android:layout_below="@+id/mc_textView"
+        android:fontFamily="@font/ftv_font"
+        android:text="EMERGENCY : "
+        android:textStyle="bold|italic" />
+
+    <TextView
+        android:id="@+id/el_leaves"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/mc_leave_textView"
+        android:layout_toEndOf="@+id/mc_textView"
+        android:fontFamily="@font/ftv_font"
+        android:padding="5dp"
+        android:textStyle="bold|italic" />
+
+    <TextView
+        android:id="@+id/pc_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_alignStart="@+id/el_textView"
+        android:layout_below="@+id/el_textView"
+        android:fontFamily="@font/ftv_font"
+        android:textStyle="bold|italic"
+        android:text="UNPAID LEAVES : " />
+
+    <TextView
+        android:id="@+id/pc_leaves"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignStart="@+id/mc_leave_textView"
+        android:layout_below="@+id/el_leaves"
+        android:fontFamily="@font/ftv_font"
+        android:padding="5dp"
+        android:textStyle="bold|italic" />
+
+    <TextView
+        android:id="@+id/role_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_alignStart="@+id/pc_textView"
+        android:layout_below="@+id/pc_textView"
+        android:fontFamily="@font/ftv_font"
+        android:textStyle="bold|italic"
+        android:text="USER ROLE : " />
+
+    <TextView
+        android:id="@+id/role_leaves"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/pc_textView"
+        android:layout_toEndOf="@+id/job"
+        android:fontFamily="@font/ftv_font"
+        android:textStyle="bold|italic" />
+
+</RelativeLayout>
