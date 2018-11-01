@@ -49,7 +49,7 @@ public class ViewStatus_Activity extends AppCompatActivity{
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        if(getSupportActionBar() != null) {
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
@@ -57,37 +57,37 @@ public class ViewStatus_Activity extends AppCompatActivity{
         mFirebaseAuth = FirebaseAuth.getInstance();
         mCurrentUser = mFirebaseAuth.getCurrentUser();
 
-        mTVname = (TextView)findViewById(R.id.name_field);
-        mTVemail = (TextView)findViewById(R.id.displayed_email);
+        mTVname = (TextView) findViewById(R.id.name_field);
+        mTVemail = (TextView) findViewById(R.id.displayed_email);
         mTVAL = (TextView) findViewById(R.id.displayed_totalLeves);
         mTVreasons = (TextView) findViewById(R.id.et_description);
         mItemSelected = (TextView) findViewById(R.id.displayed_typesleave);
-        mTVtotal =  (TextView) findViewById(R.id.displayed_total);
+        mTVtotal = (TextView) findViewById(R.id.displayed_total);
         mTVstatus = (TextView) findViewById(R.id.displayed_status);
-        displayCurrentTime = (TextView)findViewById(R.id.selected_time);
-        displayCurrentTime2 = (TextView)findViewById(R.id.selected_time2);
+        displayCurrentTime = (TextView) findViewById(R.id.selected_time);
+        displayCurrentTime2 = (TextView) findViewById(R.id.selected_time2);
 
-       mReference = FirebaseDatabase.getInstance().getReference(Reference.USER_DB);
-       //mReference1 = mReference.getParent().child(Reference.USER_INFO).child(UID);
-       mReference2 = FirebaseDatabase.getInstance().getReference((Reference.LEAVES_RECORD));
+        mReference = FirebaseDatabase.getInstance().getReference(Reference.USER_DB);
+        //mReference1 = mReference.getParent().child(Reference.USER_INFO).child(UID);
+        mReference2 = FirebaseDatabase.getInstance().getReference((Reference.LEAVES_RECORD));
         //mReference2 = FirebaseDatabase.getInstance().getReference(mCurrentUser.getUid()).child(Reference.LEAVES_RECORD);
 
         Intent intent = getIntent();
         // Load record
-        if(intent != null) {
+        if (intent != null) {
             mId = intent.getStringExtra(Reference.LEAVES_ID);
-            if(mId != null) {
+            if (mId != null) {
                 mReference2.child(mId).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Approve model = dataSnapshot.getValue(Approve.class);
-                        if(model != null) {
+                        if (model != null) {
                             mTVname.setText(model.getName());
                             mTVemail.setText(model.getEmail());
                             mItemSelected.setText(model.getTypes_leave());
-                           displayCurrentTime.setText(model.getDate_start());
-                           displayCurrentTime2.setText(model.getDate_end());
-                            mTVtotal.setText(model.getTotal()+"  "+"Days");
+                            displayCurrentTime.setText(model.getDate_start());
+                            displayCurrentTime2.setText(model.getDate_end());
+                            mTVtotal.setText(model.getTotal() + "  " + "Days");
                             mTVreasons.setText(model.getMessage());
                             mTVstatus.setText(model.getStatus());
                         }
@@ -102,23 +102,23 @@ public class ViewStatus_Activity extends AppCompatActivity{
         }
 
         // Load record
-               mReference.child("Users_info").addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
-                                mTVAL.setText("\n" + "ANNUAL LEAVES : " +snapshot.child("annual").getValue().toString());
-                                //mTVAL.setText(messageSnapshot.getValue().toString());
+        mReference.child("Users_info").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    mTVAL.setText("\n" + "ANNUAL LEAVES : " + snapshot.child("annual").getValue().toString());
+                    //mTVAL.setText(messageSnapshot.getValue().toString());
 
-                        }
-                    }
+                }
+            }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
-                    }
-                });
+            }
+        });
 
-      }
+    }
 
     @Override
     protected void onStart() {
