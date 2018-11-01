@@ -31,6 +31,7 @@ public class DashboardActivity extends AppCompatActivity {
     private CardView btn_approve;
     private CardView btn_viewstatus;
     private CardView btn_viewlist;
+    private CardView btn_details;
 
     // Firebase Authentication
     private FirebaseAuth mFirebaseAuth;
@@ -54,6 +55,7 @@ public class DashboardActivity extends AppCompatActivity {
         btn_approve = (CardView) findViewById(R.id.approveId);
         btn_viewstatus = (CardView) findViewById(R.id.viewId);
         btn_viewlist = (CardView) findViewById(R.id.viewList);
+        btn_details = (CardView) findViewById(R.id.profile);
 
         btn_adduser.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,6 +89,13 @@ public class DashboardActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(DashboardActivity.this, ViewStatus_StaffActivity.class));
+            }
+        });
+
+        btn_details.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(DashboardActivity.this, DetailsUser_Activity.class));
             }
         });
     }
@@ -152,11 +161,12 @@ public class DashboardActivity extends AppCompatActivity {
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
                                             Toast.makeText(DashboardActivity.this, "Password is updated, sign in with new password!", Toast.LENGTH_SHORT).show();
-                                            startActivity(new Intent(DashboardActivity.this, MainActivity.class));
+                                            signOut();
                                             final FirebaseDatabase fireBaseUpdatePublicHoliday = FirebaseDatabase.getInstance();
                                             DatabaseReference fireBasePublicHoliday = fireBaseUpdatePublicHoliday.getReference(Reference.USER_DB + "/" + Reference.USER_INFO + "/" + mCurrentUser.getUid() + "/password");
                                             String newpass = newPass.getText().toString().trim();
                                             fireBasePublicHoliday.setValue(newpass);
+                                            //startActivity(new Intent(DashboardActivity.this, MainActivity.class));
                                         } else {
                                             Toast.makeText(DashboardActivity.this, "Failed to update password!", Toast.LENGTH_SHORT).show();
                                         }
@@ -175,5 +185,10 @@ public class DashboardActivity extends AppCompatActivity {
             }
         });
         dlg.show();
+    }
+
+    //sign out method
+    public void signOut() {
+        mFirebaseAuth.signOut();
     }
 }

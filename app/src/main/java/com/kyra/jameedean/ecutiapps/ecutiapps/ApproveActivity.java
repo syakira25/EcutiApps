@@ -134,7 +134,7 @@ public class ApproveActivity extends AppCompatActivity implements AdapterView.On
                             mItemSelected.setText(model.getTypes_leave());
                             displayCurrentTime.setText(model.getDate_start());
                             displayCurrentTime2.setText(model.getDate_end());
-                            mTVtotal.setText(model.getTotal());
+                            mTVtotal.setText(model.getTotal()+"  "+"Days");
                             mTVstatus.setText(model.getStatus());
 //                            mTVtotal.setText(dataSnapshot.child("total").getValue().toString());
                             mTVreasons.setText(model.getMessage());
@@ -179,21 +179,21 @@ public class ApproveActivity extends AppCompatActivity implements AdapterView.On
         super.onStop();
     }
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
+//    @Override
+//    public boolean onPrepareOptionsMenu(Menu menu) {
 
-        MenuItem item = menu.findItem(R.id.action_delete);
-
-        if (mId == null) {
-            item.setEnabled(false);
-            item.setVisible(false);
-        } else {
-            item.setEnabled(true);
-            item.setVisible(true);
-        }
-
-        return true;
-    }
+//        MenuItem item = menu.findItem(R.id.action_delete);
+//
+//        if (mId == null) {
+//            item.setEnabled(false);
+//            item.setVisible(false);
+//        } else {
+//            item.setEnabled(true);
+//            item.setVisible(true);
+//        }
+//
+//        return true;
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

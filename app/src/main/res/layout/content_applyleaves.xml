@@ -127,7 +127,8 @@
         android:layout_width="30dp"
         android:layout_height="wrap_content"
         android:layout_above="@+id/select_time2"
-        android:layout_alignParentEnd="true"
+        android:layout_alignEnd="@+id/displayed_totalLeves"
+        android:layout_marginEnd="6dp"
         android:padding="16dp"
         android:src="@drawable/calendar2" />
 
@@ -157,8 +158,8 @@
         android:id="@+id/select_time2"
         android:layout_width="30dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignTop="@+id/date_leaveEnd"
+        android:layout_alignStart="@+id/select_time"
+        android:layout_below="@+id/date_leaveStart"
         android:padding="16dp"
         android:src="@drawable/calendar2" />
 
@@ -183,6 +184,15 @@
         android:textStyle="bold|italic"
         android:fontFamily="@font/ftv_font"/>
 
+    <TextView
+        android:id="@+id/day_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/displayed_totalLeves"
+        android:layout_below="@+id/select_time2"
+        android:fontFamily="@font/ftv_font"
+        android:padding="10dp"
+        android:text="DAYS " />
 
     <EditText
         android:id="@+id/et_description"

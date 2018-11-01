@@ -160,12 +160,12 @@
         android:textStyle="bold|italic" />
 
     <Spinner
-        android:layout_width="20dp"
-        android:layout_height="wrap_content"
         android:id="@+id/btnStatus"
-        android:layout_alignBottom="@+id/displayed_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/displayed_status"
         android:layout_toEndOf="@+id/selected_time2"
-        android:spinnerMode="dialog"/>
+        android:spinnerMode="dialog" />
 
     <TextView
         android:id="@+id/et_description"

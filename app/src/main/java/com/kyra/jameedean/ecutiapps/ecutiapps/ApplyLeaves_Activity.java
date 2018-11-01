@@ -242,21 +242,21 @@ public class ApplyLeaves_Activity extends AppCompatActivity implements AdapterVi
         }
     }
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-
-        MenuItem item = menu.findItem(R.id.action_delete);
-
-        if(mId == null) {
-            item.setEnabled(false);
-            item.setVisible(false);
-        } else {
-            item.setEnabled(true);
-            item.setVisible(true);
-        }
-
-        return true;
-    }
+//    @Override
+//    public boolean onPrepareOptionsMenu(Menu menu) {
+//
+//        MenuItem item = menu.findItem(R.id.action_delete);
+//
+//        if(mId == null) {
+//            item.setEnabled(false);
+//            item.setVisible(false);
+//        } else {
+//            item.setEnabled(true);
+//            item.setVisible(true);
+//        }
+//
+//        return true;
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -314,10 +314,46 @@ public class ApplyLeaves_Activity extends AppCompatActivity implements AdapterVi
 
         ArrayList<String> holidays = new ArrayList<>();
         // contoh hari sultan kedah.. 22/10/2018 .. jangan gatal kerja
-
+        //2018
+        holidays.add("2018-01-21");
+        holidays.add("2018-02-16");
+        holidays.add("2018-02-17");
+        holidays.add("2018-04-14");
+        holidays.add("2018-05-01");
+        holidays.add("2018-05-17");
+        holidays.add("2018-05-29");
+        holidays.add("2018-06-15");
+        holidays.add("2018-06-16");
+        holidays.add("2018-08-22");
+        holidays.add("2018-08-23");
+        holidays.add("2018-08-31");
+        holidays.add("2018-09-09");
+        holidays.add("2018-09-11");
+        holidays.add("2018-09-16");
         holidays.add("2018-10-22");
+        holidays.add("2018-11-06");
+        holidays.add("2018-11-20");
+        holidays.add("2018-12-25");
 
-
+        //2019
+        holidays.add("2019-01-20");
+        holidays.add("2019-02-05");
+        holidays.add("2019-02-06");
+        holidays.add("2019-04-03");
+        holidays.add("2019-05-01");
+        holidays.add("2019-05-06");
+        holidays.add("2019-05-19");
+        holidays.add("2019-06-05");
+        holidays.add("2019-06-06");
+        holidays.add("2019-08-11");
+        holidays.add("2019-08-12");
+        holidays.add("2019-08-31");
+        holidays.add("2019-09-01");
+        holidays.add("2019-09-09");
+        holidays.add("2019-09-16");
+        holidays.add("2019-10-27");
+        holidays.add("2019-11-09");
+        holidays.add("2019-12-25");
         int workDays = 0;
 
     /*If start date is coming after end date, Then shuffling Dates and storing dates

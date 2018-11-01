@@ -93,9 +93,14 @@ public class StaffMain_Activity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(StaffMain_Activity.this);
+        mLayoutManager.setReverseLayout(true);
+        mLayoutManager.setStackFromEnd(true);
+        // And now set it to the RecyclerView
+        recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setAdapter(mAdapter);
 
-        mReference = FirebaseDatabase.getInstance().getReference(mCurrentUser.getUid()).child(Reference.USER_DB);
+        mReference = FirebaseDatabase.getInstance().getReference(Reference.USER_DB).child(Reference.USER_INFO);
     }
 
     @Override

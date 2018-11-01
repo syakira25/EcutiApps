@@ -19,6 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.kyra.jameedean.ecutiapps.ecutiapps.data.Reference;
 import com.kyra.jameedean.ecutiapps.ecutiapps.model.Approve;
+import com.kyra.jameedean.ecutiapps.ecutiapps.model.Staff;
 
 public class ViewStatus_Activity extends AppCompatActivity{
 
@@ -28,6 +29,8 @@ public class ViewStatus_Activity extends AppCompatActivity{
     private TextView mTVAL, mTVtotal;
     private TextView mItemSelected, mTVstatus;
     private TextView mTVreasons;
+
+    private String UID;
 
     // Firebase Authentication
     private String mId;
@@ -65,7 +68,7 @@ public class ViewStatus_Activity extends AppCompatActivity{
         displayCurrentTime2 = (TextView)findViewById(R.id.selected_time2);
 
        mReference = FirebaseDatabase.getInstance().getReference(Reference.USER_DB);
-       mReference1 = mReference.child(Reference.USER_INFO);
+       //mReference1 = mReference.getParent().child(Reference.USER_INFO).child(UID);
        mReference2 = FirebaseDatabase.getInstance().getReference((Reference.LEAVES_RECORD));
         //mReference2 = FirebaseDatabase.getInstance().getReference(mCurrentUser.getUid()).child(Reference.LEAVES_RECORD);
 
@@ -84,7 +87,7 @@ public class ViewStatus_Activity extends AppCompatActivity{
                             mItemSelected.setText(model.getTypes_leave());
                            displayCurrentTime.setText(model.getDate_start());
                            displayCurrentTime2.setText(model.getDate_end());
-                            mTVtotal.setText(model.getTotal());
+                            mTVtotal.setText(model.getTotal()+"  "+"Days");
                             mTVreasons.setText(model.getMessage());
                             mTVstatus.setText(model.getStatus());
                         }
@@ -99,12 +102,13 @@ public class ViewStatus_Activity extends AppCompatActivity{
         }
 
         // Load record
-                mReference1.child(mCurrentUser.getUid()).addValueEventListener(new ValueEventListener() {
+               mReference.child("Users_info").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        Approve model = dataSnapshot.getValue(Approve.class);
-                        if (model != null) {
-                            mTVAL.setText("\n" + "ANNUAL LEAVES : " + dataSnapshot.child("annual").getValue().toString() + "\n\n" + "MEDICAL LEAVE : " + dataSnapshot.child("mc").getValue().toString() + "\n\n" + "EMERGENCY LEAVE : " + dataSnapshot.child("el").getValue().toString() + "\n\n" + "PUBLIC HOLIDAY : " + dataSnapshot.child("public_leave").getValue().toString());
+                        for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
+                                mTVAL.setText("\n" + "ANNUAL LEAVES : " +snapshot.child("annual").getValue().toString());
+                                //mTVAL.setText(messageSnapshot.getValue().toString());
+
                         }
                     }
 
@@ -114,7 +118,7 @@ public class ViewStatus_Activity extends AppCompatActivity{
                     }
                 });
 
-        }
+      }
 
     @Override
     protected void onStart() {

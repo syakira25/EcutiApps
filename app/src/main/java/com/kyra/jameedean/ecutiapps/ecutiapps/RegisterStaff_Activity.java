@@ -98,7 +98,7 @@ public class RegisterStaff_Activity extends AppCompatActivity implements Adapter
         // attaching data adapter to spinner
         roleuser.setAdapter(dataAdapter);
 
-        mReference = FirebaseDatabase.getInstance().getReference(mCurrentUser.getUid()).child(Reference.USER_DB);
+        mReference = FirebaseDatabase.getInstance().getReference(Reference.USER_DB).child(Reference.USER_INFO);
         mReference1 = FirebaseDatabase.getInstance().getReference(Reference.USER_DB);
         mReference2 = mReference1.child(mCurrentUser.getUid());
 
@@ -172,7 +172,7 @@ public class RegisterStaff_Activity extends AppCompatActivity implements Adapter
         switch (item.getItemId()) {
             case R.id.action_save:
                 registerUser();
-                sendEmailVerification();
+                //sendEmailVerification();
                 break;
             case R.id.action_delete:
                 if(!mId.isEmpty()) {
@@ -201,7 +201,7 @@ public class RegisterStaff_Activity extends AppCompatActivity implements Adapter
             mId = mReference.push().getKey();
         }
 
-        mReference.child(mId).setValue(model, listener);
+        //mReference.child(mId).setValue(model, listener);
     }
 
     private void actionNotification(DatabaseError error, int successResourceId) {
@@ -361,7 +361,6 @@ public class RegisterStaff_Activity extends AppCompatActivity implements Adapter
                 else
                 {
                     // email not sent, so display message and restart the activity or do whatever you wish to do
-
                     //restart this activity
                     overridePendingTransition(0, 0);
                     finish();

@@ -127,6 +127,24 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".DashboardStaffActivity" />
         </activity>
+
+        <activity android:name=".DetailsUser_Activity"
+            android:label="Detail users"
+            android:parentActivityName=".DetailsUser_Activity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".DashboardStaffActivity" />
+        </activity>
+
+        <activity android:name=".UpdateUser_Activity"
+            android:label="Update Detail users"
+            android:parentActivityName=".StaffMain_Activity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".DashboardStaffActivity" />
+        </activity>
     </application>
 
 </manifest>

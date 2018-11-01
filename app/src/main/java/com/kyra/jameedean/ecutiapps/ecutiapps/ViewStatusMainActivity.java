@@ -81,6 +81,11 @@ public class ViewStatusMainActivity extends AppCompatActivity{
                 startActivity(intent);
             }
         });
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(ViewStatusMainActivity.this);
+        mLayoutManager.setReverseLayout(true);
+        mLayoutManager.setStackFromEnd(true);
+                // And now set it to the RecyclerView
+        recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setAdapter(mAdapter);
 
         mReference = FirebaseDatabase.getInstance().getReference(Reference.LEAVES_RECORD);

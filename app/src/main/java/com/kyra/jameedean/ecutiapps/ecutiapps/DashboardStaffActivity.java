@@ -28,6 +28,7 @@ public class DashboardStaffActivity extends AppCompatActivity {
 
     private CardView btn_apply;
     private CardView btn_viewstatus;
+    private CardView btn_details;
 
     // Firebase Authentication
     private FirebaseAuth mFirebaseAuth;
@@ -48,6 +49,7 @@ public class DashboardStaffActivity extends AppCompatActivity {
 
         btn_apply = (CardView) findViewById(R.id.applyId);
         btn_viewstatus = (CardView) findViewById(R.id.viewId);
+        btn_details = (CardView) findViewById(R.id.profile);
 
         btn_apply.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,6 +62,13 @@ public class DashboardStaffActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(DashboardStaffActivity.this, ViewStatus_StaffActivity.class));
+            }
+        });
+
+        btn_details.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(DashboardStaffActivity.this, DetailsUser_Activity.class));
             }
         });
     }

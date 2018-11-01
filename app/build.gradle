@@ -7,8 +7,8 @@ android {
         applicationId "com.kyra.jameedean.ecutiapps.ecutiapps"
         minSdkVersion 17
         targetSdkVersion 26
-        versionCode 1
-        versionName "1.0"
+        versionCode 3
+        versionName "2.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -23,6 +23,7 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.google.firebase:firebase-database:11.6.0'
     implementation 'com.google.firebase:firebase-auth:11.6.0'
+    implementation 'com.google.firebase:firebase-crash:11.6.0'
     compile 'com.google.android.gms:play-services-auth:11.6.0'
     compile 'com.android.support:support-annotations:27.1.1'
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {

@@ -81,6 +81,11 @@ public class ApproveMainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(ApproveMainActivity.this);
+        mLayoutManager.setReverseLayout(true);
+        mLayoutManager.setStackFromEnd(true);
+        // And now set it to the RecyclerView
+        recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setAdapter(mAdapter);
 
         mReference = FirebaseDatabase.getInstance().getReference(Reference.USER_DB);

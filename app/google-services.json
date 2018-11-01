@@ -10,12 +10,56 @@
       "client_info": {
         "mobilesdk_app_id": "1:243852762786:android:b3c3b73e86ba8e34",
         "android_client_info": {
-          "package_name": "com.kyra.jameedean.ecutiapps.ecutiapps"
+          "package_name": "com.example.jameedean.ecutiapps"
         }
       },
       "oauth_client": [
         {
           "client_id": "243852762786-daph2kmbdb6ci2hqqdbddhqp6ugukklt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.jameedean.ecutiapps",
+            "certificate_hash": "9f923c9852bbdc6a6ecbac68db89f79b0786980a"
+          }
+        },
+        {
+          "client_id": "243852762786-hegfl6obv80j65q4r0aahrp0s87mk7jh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5xWPjDhwiy-KOcjaeqEl6jeBcD3Zu1vQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "243852762786-hegfl6obv80j65q4r0aahrp0s87mk7jh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:243852762786:android:0102596cf4688aa1",
+        "android_client_info": {
+          "package_name": "com.kyra.jameedean.ecutiapps.ecutiapps"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "243852762786-8lsg3api6c7ujv5hqte8ssicftqofmvl.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.kyra.jameedean.ecutiapps.ecutiapps",

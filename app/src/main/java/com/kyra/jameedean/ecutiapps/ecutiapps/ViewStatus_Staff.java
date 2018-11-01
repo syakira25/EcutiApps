@@ -30,7 +30,7 @@ public class ViewStatus_Staff extends AppCompatActivity {
 
     // Firebase Authentication
     private String mId;
-    private DatabaseReference mReference, mReference1, mReference2;
+    private DatabaseReference mReference, mReference1, mReference2,mReference3;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mCurrentUser;
 
@@ -66,6 +66,7 @@ public class ViewStatus_Staff extends AppCompatActivity {
         mReference = FirebaseDatabase.getInstance().getReference(Reference.USER_DB);
         mReference1 = mReference.child(Reference.USER_INFO);
         mReference2 = FirebaseDatabase.getInstance().getReference(Reference.LEAVES_RECORD);
+        mReference3 = FirebaseDatabase.getInstance().getReference(mCurrentUser.getUid()).child(Reference.LEAVES_RECORD);
 
         Intent intent = getIntent();
         // Load record
@@ -82,7 +83,7 @@ public class ViewStatus_Staff extends AppCompatActivity {
                             mItemSelected.setText(model.getTypes_leave());
                             displayCurrentTime.setText(model.getDate_start());
                             displayCurrentTime2.setText(model.getDate_end());
-                            mTVtotal.setText(model.getTotal());
+                            mTVtotal.setText(model.getTotal()+"  "+"Days");
                             mTVreasons.setText(model.getMessage());
                             mTVstatus.setText(model.getStatus());
                         }
@@ -153,6 +154,13 @@ public class ViewStatus_Staff extends AppCompatActivity {
             case R.id.action_delete:
                 if (!mId.isEmpty()) {
                     mReference2.child(mId).removeValue(new DatabaseReference.CompletionListener() {
+                        @Override
+                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                            actionNotification(databaseError, R.string.done_deleted2);
+                        }
+                    });
+
+                    mReference3.child(mId).removeValue(new DatabaseReference.CompletionListener() {
                         @Override
                         public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                             actionNotification(databaseError, R.string.done_deleted2);
