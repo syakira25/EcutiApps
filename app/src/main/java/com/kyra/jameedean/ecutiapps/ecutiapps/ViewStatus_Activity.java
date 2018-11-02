@@ -114,7 +114,6 @@ public class ViewStatus_Activity extends AppCompatActivity{
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
 
